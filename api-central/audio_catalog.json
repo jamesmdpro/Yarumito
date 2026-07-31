@@ -1,0 +1,85 @@
+{
+  "audios": [
+    {
+      "code": "GEN_SI",
+      "type": "generic",
+      "description": "Afirmación simple",
+      "translations": {
+        "es": "Sí.",
+        "en": "Yes."
+      }
+    },
+    {
+      "code": "GEN_NO",
+      "type": "generic",
+      "description": "Negación simple",
+      "translations": {
+        "es": "No.",
+        "en": "No."
+      }
+    },
+    {
+      "code": "GEN_BIEN_HECHO",
+      "type": "generic",
+      "description": "Felicitación estándar por acierto",
+      "translations": {
+        "es": "¡Muy bien hecho! ¡Lo lograste!",
+        "en": "Well done! You did it!"
+      }
+    },
+    {
+      "code": "GEN_INTENTALO_OTRA_VEZ",
+      "type": "generic",
+      "description": "Ánimo tras un error",
+      "translations": {
+        "es": "Casi lo tienes. Vamos a intentarlo otra vez.",
+        "en": "Close. Let's try it again."
+      }
+    },
+    {
+      "code": "GEN_PAUSA_ACTIVA",
+      "type": "generic",
+      "description": "Recomendación de descanso por fatiga",
+      "translations": {
+        "es": "¡El Árbol Sabio necesita un descanso para regar sus hojas! Hagamos una pausa activa y volvemos en un momento.",
+        "en": "The Wise Tree needs a break to water its leaves! Let's take a short break and come back in a moment."
+      }
+    },
+    {
+      "code": "W1_QR_BUSCAR_3",
+      "type": "specific",
+      "description": "Instrucción de búsqueda de QR para el número 3",
+      "translations": {
+        "es": "¡Vamos a buscar! Encuentra el número 3 escondido en la habitación y escanéalo con tu cámara.",
+        "en": "Let's explore! Find the number 3 hidden in the room and scan it with your camera."
+      }
+    },
+    {
+      "code": "W1_QR_BUSCAR_5",
+      "type": "specific",
+      "description": "Instrucción de búsqueda de QR para el número 5",
+      "translations": {
+        "es": "¡A explorar! Encuentra la tarjeta del número 5 en la habitación y muéstramela con tu cámara.",
+        "en": "Time to explore! Find the card for number 5 in the room and show it to me with your camera."
+      }
+    },
+    {
+      "code": "W1_QR_ERROR_ASOCIACION_3",
+      "type": "specific",
+      "description": "Mensaje si escanea otro número cuando buscaba el 3",
+      "translations": {
+        "es": "¡Oh, has encontrado otro número! Es muy bonito, pero ahora estamos buscando el número 3. ¡Sigue buscando!",
+        "en": "Oh, you found a different number! It looks nice, but we are looking for the number 3. Keep searching!"
+      }
+    },
+    {
+      "code": "W1_QR_ERROR_ASOCIACION_5",
+      "type": "specific",
+      "description": "Mensaje si escanea otro número cuando buscaba el 5",
+      "translations": {
+        "es": "¡Has encontrado otra tarjeta! Pero acuérdate, estamos buscando el número 5. ¡Tú puedes, encuéntralo!",
+        "en": "You found a different card! But remember, we are looking for the number 5. You can do it, go find it!"
+      }
+    }
+  ]
+}

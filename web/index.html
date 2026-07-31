@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <title>Yarumito - Aprendizaje Adaptativo para Niños y Neurodiversidad 🌳</title>
+    <meta name="description" content="Yarumito es una plataforma de aprendizaje libre, gratuita y sin fines de lucro. Ayuda a niños con dificultades de aprendizaje y neurodiversidad mediante juegos, voz y movimiento.">
+    <meta name="keywords" content="aprendizaje adaptativo, TDAH, dislexia, autismo, juegos educativos gratis, niños, neurodiversidad, educación especial, bilingüe">
+    <meta name="author" content="Ecosistema Yarumito">
+    
+    <!-- OpenGraph Tags -->
+    <meta property="og:title" content="Yarumito - Ecosistema de Aprendizaje Adaptativo">
+    <meta property="og:description" content="Juegos educativos gratuitos adaptados a la edad cognitiva de cada niño mediante Inteligencia Artificial. Sin estrés, sin calificaciones.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="http://127.0.0.1:8000/static/qr/qr_number_3.png">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <!-- Fondo animado tranquilo de hojas cayendo -->
+    <div class="leaf-container" id="leaf-container"></div>
+
+    <header class="app-header">
+        <div class="logo" id="logo-el">
+            <span class="logo-icon">🌳</span> Yarumito
+        </div>
+        <div class="header-controls">
+            <button id="lang-toggle" class="lang-btn">ES / EN</button>
+            <a href="#donar-section" class="donar-nav-btn" id="donar-nav-btn">❤️ Donar</a>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <h1 id="hero-title">Ayudamos a cada niño a florecer a su propio ritmo</h1>
+            <p id="hero-subtitle" class="subtitle">Un ecosistema de aprendizaje adaptativo, libre y bilingüe, diseñado especialmente para la neurodiversidad y el juego activo.</p>
+            
+            <!-- Botón de acción principal: Guía directa a la actividad -->
+            <div class="hero-cta-container">
+                <a href="#jugar-section" class="cta-button" id="cta-play-now">🎮 Jugar Primer Reto Gratis</a>
+                <p class="cta-note" id="cta-note-el">Sin registros ni tarjetas de crédito. ¡Juega de inmediato!</p>
+            </div>
+        </section>
+
+        <!-- SECCIÓN DE JUEGO LIBRE (Primer reto sin registro) -->
+        <section id="jugar-section" class="jugar-now-section glass-card">
+            <div class="play-badge" id="play-badge-el">👉 Actividad Inicial Gratuita</div>
+            <h2 id="play-section-title">¡Vamos a jugar con el Árbol Sabio!</h2>
+            <p id="play-section-desc" class="section-desc">Ayuda a la pequeña semilla a dar sus primeros brotes. Escucha la voz del Árbol Sabio y selecciona la respuesta correcta en la pantalla.</p>
+            
+            <div class="free-activity-container">
+                <div class="activity-instructions">
+                    <div class="wise-tree-avatar">🌰</div>
+                    <div class="speech-bubble">
+                        <span class="bubble-speaker" id="speaker-lbl">El Árbol Sabio dice:</span>
+                        <div class="bubble-text" id="free-activity-voice">"¡Hola! Soy tu amigo el Árbol Sabio. Toca el número 3 para ayudarme a despertar."</div>
+                        <button class="voice-btn" id="play-free-voice">🔊 Escuchar Instrucción</button>
+                    </div>
+                </div>
+
+                <!-- Opciones interactivas de números -->
+                <div class="number-options-grid">
+                    <button class="number-opt-btn" data-num="1">1</button>
+                    <button class="number-opt-btn" data-num="2">2</button>
+                    <button class="number-opt-btn active-pulse" data-num="3">3</button>
+                    <button class="number-opt-btn" data-num="4">4</button>
+                </div>
+
+                <div class="activity-result" id="free-activity-feedback">
+                    <!-- Mensaje dinámico de acierto o reintento -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ZONA DE JUEGO ACTIVO (Aparece tras registro o iniciar una actividad) -->
+        <section id="game-play-zone" class="glass-card active-game-section" style="display: none;">
+            <div class="game-zone-header">
+                <div class="child-profile-badge">
+                    <span id="child-badge-avatar" class="badge-avatar">🦊</span>
+                    <div class="badge-info">
+                        <span id="child-badge-name" class="badge-name">James</span>
+                        <span id="child-badge-status" class="badge-status">¡Nivel 1!</span>
+                    </div>
+                </div>
+                <h2 id="game-zone-title-label">🎮 Arena de Juego Activo - Mundo 1</h2>
+                <div class="wise-tree-small-avatar" id="wise-tree-stage-icon" style="font-size: 2.2rem; background: var(--color-pastel-green); border-radius:50%; width:50px; height:50px; display:flex; align-items:center; justify-content:center;">🌰</div>
+            </div>
+            
+            <div class="game-zone-layout">
+                <!-- Columna Izquierda: El Árbol de Progreso -->
+                <div class="progress-tree-column">
+                    <h3 id="progress-tree-title">🌳 Árbol de Progreso</h3>
+                    <div class="progress-tree-container">
+                        <div class="tree-trunk-line"></div>
+                        <div class="progress-tree-path" id="progress-tree-path">
+                            <!-- 8 Hojas/Nodos generados dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Columna Derecha: Arena de la Actividad Activa -->
+                <div class="active-activity-column">
+                    <div class="active-activity-box" id="active-activity-box">
+                        <!-- El juego activo se renderiza aquí -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN DE MUNDOS CURRICULARES (Los 20 Mundos) -->
+        <section class="worlds-showcase glass-card">
+            <h2 id="worlds-title">🗺️ Ruta de Aprendizaje: Los 20 Mundos</h2>
+            <p id="worlds-desc" class="section-desc">Nuestra currícula está estructurada en mundos progresivos. Cada mundo fortalece habilidades auditivas, visuales, de motricidad y de interacción física.</p>
+            
+            <div class="worlds-grid" id="worlds-grid-container">
+                <!-- Cargado dinámicamente desde app.js -->
+            </div>
+        </section>
+
+        <!-- DOS COLUMNAS: SIMULADOR QR Y VOCES (De la etapa anterior) -->
+        <div class="two-column-layout">
+            <section class="qr-simulator glass-card">
+                <h2 id="qr-title">📷 Búsqueda Activa con QR</h2>
+                <p id="qr-desc" class="section-desc">Combina el movimiento con el reconocimiento de números. El niño busca tarjetas impresas y las escanea.</p>
+                <div class="simulator-box">
+                    <div class="instruction-bubble">
+                        <div class="avatar">🌳</div>
+                        <div class="bubble-content">
+                            <span id="target-voice-label">El Árbol Sabio dice:</span>
+                            <strong id="instruction-text">Busca el número 3 y escanéalo.</strong>
+                            <button class="play-audio-btn" id="play-target-audio">🔊 Escuchar Instrucción</button>
+                        </div>
+                    </div>
+                    <div class="simulated-camera">
+                        <div class="camera-lens">
+                            <div class="scanning-line"></div>
+                            <span class="camera-status" id="camera-status">Buscando tarjeta...</span>
+                            <div class="card-options">
+                                <button class="scan-option-btn" data-payload="yarumito://activity/number/2">📄 Escanear [2]</button>
+                                <button class="scan-option-btn" data-payload="yarumito://activity/number/3">📄 Escanear [3]</button>
+                                <button class="scan-option-btn" data-payload="yarumito://activity/number/5">📄 Escanear [5]</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="simulation-feedback" id="scan-feedback-box"></div>
+                </div>
+            </section>
+
+            <section class="voice-repository glass-card">
+                <h2 id="voice-title">🎙️ Catálogo de Voces de Yarumito</h2>
+                <p id="voice-desc" class="section-desc">Voces genéricas y específicas que el motor de IA selecciona para guiar al niño de forma pausada y acogedora.</p>
+                <div class="audio-list" id="audio-list-container">
+                    <p class="loading-catalog">Cargando catálogo de audios...</p>
+                </div>
+            </section>
+        </div>
+
+        <!-- MÓDULO EXPANSIBLE DE INFORMACIÓN DETALLADA (Acordeón) -->
+        <section class="expandable-info glass-card">
+            <h2 id="info-section-title">🔍 Información Detallada para Acompañantes</h2>
+            <p id="info-section-desc" class="section-desc">Haz clic en cada sección para expandir y conocer cómo opera Yarumito para cada actor del ecosistema.</p>
+            
+            <div class="accordion">
+                <div class="accordion-item">
+                    <button class="accordion-header" id="accordion-head-1">
+                        <span>👨‍👩‍👦 Para Padres y Madres: ¿Cómo jugar en casa?</span>
+                        <span class="accordion-icon">➕</span>
+                    </button>
+                    <div class="accordion-content" id="accordion-content-1">
+                        <p id="accordion-text-1">El rol de la familia es fundamental. La app de Yarumito propone pausas activas cada 15 minutos y genera retos cooperativos ("Pregúntale a papá"). Desde tu panel, podrás ver el crecimiento de la semilla de tu hijo y descargar plantillas en PDF con tarjetas numéricas y juegos analógicos.</p>
+                    </div>
+                </div>
+                
+                <div class="accordion-item">
+                    <button class="accordion-header" id="accordion-head-2">
+                        <span>🎓 Para Docentes: Integración en el Salón de Clases</span>
+                        <span class="accordion-icon">➕</span>
+                    </button>
+                    <div class="accordion-content" id="accordion-content-2">
+                        <p id="accordion-text-2">Los docentes no enseñan dentro de la plataforma, sino que acompañan. Yarumito te permite crear grupos de estudiantes, ver resúmenes pedagógicos agregados (por ejemplo, saber si un grupo tiene dificultades con números mayores a 5) y recibir sugerencias de actividades físicas grupales sin pantallas.</p>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header" id="accordion-head-3">
+                        <span>🩺 Para Terapeutas: Herramientas de Intervención Adaptadas</span>
+                        <span class="accordion-icon">➕</span>
+                    </button>
+                    <div class="accordion-content" id="accordion-content-3">
+                        <p id="accordion-text-3">Como terapeuta, cuentas con un portal avanzado. Podrás diseñar planes de estudio específicos desbloqueando ejercicios selectivos, analizar estadísticas detalladas de velocidad de respuesta, patrones de error recurrente (como fallas visomotoras o auditivas) y agregar bitácoras clínicas de seguimiento.</p>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header" id="accordion-head-4">
+                        <span>🔬 Para Investigadores: Privacidad y Datos Científicos</span>
+                        <span class="accordion-icon">➕</span>
+                    </button>
+                    <div class="accordion-content" id="accordion-content-4">
+                        <p id="accordion-text-4">Yarumito apoya la investigación científica del aprendizaje. Dividimos estrictamente los datos de identidad (cifrados) de la telemetría de juego. Los investigadores tienen acceso a registros 100% anonimizados de tiempos de reacción, curvas de aprendizaje y recurrencia de errores, cumpliendo con los estándares de COPPA.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN DE MISIÓN, VISIÓN Y DONACIONES (NO LUCRO) -->
+        <section id="donar-section" class="donations-section glass-card">
+            <div class="donations-layout">
+                <div class="donations-info">
+                    <span class="heart-badge">❤️ Transparencia y Misión</span>
+                    <h2 id="mission-title">Una iniciativa social financiada al 100% por donantes</h2>
+                    <p id="mission-body-1" class="donations-text"><strong>Yarumito es y será siempre 100% libre de lucro y gratuito.</strong> Creemos firmemente que la educación adaptativa de calidad debe ser un derecho y no un privilegio comercial. Ningún niño quedará excluido del ecosistema por razones económicas.</p>
+                    <p id="mission-body-2" class="donations-text">Tu contribución directa no compra licencias. Ayuda a sostener servidores en la nube, financiar la síntesis de nuevas voces pedagógicas en múltiples idiomas y desarrollar actividades accesibles adicionales.</p>
+                </div>
+                
+                <div class="donations-card">
+                    <h3 id="donations-card-title">Apoya el Aprendizaje</h3>
+                    <div class="donation-options">
+                        <button class="don-opt-btn active" data-amount="10">$10 USD</button>
+                        <button class="don-opt-btn" data-amount="25">$25 USD</button>
+                        <button class="don-opt-btn" data-amount="50">$50 USD</button>
+                    </div>
+                    <button class="donate-btn" id="donate-submit-btn">Contribuir ahora</button>
+                    <div class="donation-impact-label" id="donation-impact-lbl">✔ Financiará 18 días de servidor.</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- MODAL DE REGISTRO DEL TUTOR (Aparece tras completar la actividad inicial libre) -->
+    <div id="register-modal" class="modal-overlay">
+        <div class="modal-card glass-card">
+            <div class="modal-header">
+                <h2>🌳 ¡Excelente trabajo!</h2>
+                <button class="close-modal-btn" id="close-modal-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-graphic">🌱</div>
+                
+                <!-- Pestañas de Alternancia -->
+                <div class="modal-tabs" style="display:flex; justify-content:center; gap:10px; margin-bottom:15px; border-bottom:1px solid rgba(0,0,0,0.05); padding-bottom:10px;">
+                    <button type="button" class="lang-btn active" id="tab-register-btn" style="border-radius:15px;">Crear Cuenta</button>
+                    <button type="button" class="lang-btn" id="tab-login-btn" style="border-radius:15px;">Continuar Progreso</button>
+                </div>
+
+                <h3 id="modal-subtitle-el">¡Has despertado a la pequeña semilla!</h3>
+                <p id="modal-desc-el">¡Qué lindo! Pídele ayuda a tu papá, mamá o a un adulto para registrar una cuenta de tutor gratuita. Así guardaremos el progreso y el crecimiento de tu Árbol Sabio.</p>
+                
+                <!-- Formulario de Inicio de Sesión (Continuar Progreso) -->
+                <form id="tutor-login-form" class="register-form" style="display: none;">
+                    <div class="form-group">
+                        <label for="login-tutor-email" id="label-login-email">Ingresa el correo del tutor para continuar</label>
+                        <input type="email" id="login-tutor-email" required placeholder="ejemplo@correo.com">
+                    </div>
+                    <button type="submit" class="register-submit-btn" id="btn-login-submit">Cargar Progreso y Entrar</button>
+                </form>
+
+                <!-- Formulario de Registro -->
+                <form id="tutor-register-form" class="register-form">
+                    <div class="form-group">
+                        <label for="tutor-name" id="label-name">Nombre del Tutor</label>
+                        <input type="text" id="tutor-name" required placeholder="Ej. Ana María">
+                    </div>
+                    <div class="form-group">
+                        <label for="tutor-email" id="label-email">Correo Electrónico</label>
+                        <input type="email" id="tutor-email" required placeholder="ejemplo@correo.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="tutor-role" id="label-role">Tu relación con el niño</label>
+                        <select id="tutor-role">
+                            <option value="padre">Padre / Madre</option>
+                            <option value="docente">Docente / Maestro</option>
+                            <option value="terapeuta">Terapeuta Infantil</option>
+                        </select>
+                    </div>
+                    
+                    <!-- DATOS DEL NIÑO Y SELECCIÓN DE AVATAR -->
+                    <div class="form-group">
+                        <label for="child-name" id="label-child-name" style="color:var(--color-green); font-weight:800;">Nombre del Niño / Niña</label>
+                        <input type="text" id="child-name" required placeholder="Ej. James">
+                    </div>
+                    <div class="form-group">
+                        <label id="label-avatar-select" style="color:var(--color-green); font-weight:800;">Elige su avatar de juego</label>
+                        <div class="avatar-selector-grid">
+                            <button type="button" class="avatar-opt-btn active" data-avatar="🦊">
+                                <span class="avatar-emoji">🦊</span>
+                                <span class="avatar-name">Zorro</span>
+                            </button>
+                            <button type="button" class="avatar-opt-btn" data-avatar="🐻">
+                                <span class="avatar-emoji">🐻</span>
+                                <span class="avatar-name">Oso</span>
+                            </button>
+                            <button type="button" class="avatar-opt-btn" data-avatar="🐰">
+                                <span class="avatar-emoji">🐰</span>
+                                <span class="avatar-name">Conejo</span>
+                            </button>
+                            <button type="button" class="avatar-opt-btn" data-avatar="🦁">
+                                <span class="avatar-emoji">🦁</span>
+                                <span class="avatar-name">León</span>
+                            </button>
+                        </div>
+                        <input type="hidden" id="selected-avatar-input" value="🦊">
+                    </div>
+                    
+                    <div class="form-privacy">
+                        <input type="checkbox" id="privacy-check" required checked>
+                        <label for="privacy-check" id="label-privacy">Acepto los términos de privacidad y anonimización de datos.</label>
+                    </div>
+                    <button type="submit" class="register-submit-btn" id="btn-register-submit">Crear cuenta y Guardar Árbol</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE ACTIVIDADES DE MUNDO 1 (Desbloqueado) -->
+    <div id="world-activities-modal" class="modal-overlay">
+        <div class="modal-card glass-card wide-modal-card">
+            <div class="modal-header">
+                <h2 id="act-modal-title">🎮 Actividades: Mundo 1</h2>
+                <button class="close-modal-btn" id="close-activities-modal-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="act-modal-desc" style="color:var(--text-muted); margin-bottom: 20px;">Selecciona una actividad para iniciar tu aprendizaje guiado por el Árbol Sabio:</p>
+                <div class="activities-grid" id="activities-grid-container">
+                    <!-- Cargado dinámicamente desde app.js -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="app-footer">
+        <p>Yarumito 🌳 - Iniciativa Social Abierta, Adaptativa y Bilingüe para la Neurodiversidad.</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
