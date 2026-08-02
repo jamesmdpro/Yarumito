@@ -142,6 +142,25 @@ body {
     transform: translateY(-1px);
 }
 
+.login-nav-btn {
+    background: var(--color-pastel-blue);
+    color: var(--color-accent);
+    text-decoration: none;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(52, 152, 219, 0.2);
+    cursor: pointer;
+}
+
+.login-nav-btn:hover {
+    background: var(--color-accent);
+    color: white;
+    transform: translateY(-1px);
+}
+
 .donar-nav-btn {
     background: #fadbd8;
     color: var(--color-heart);

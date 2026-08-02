@@ -33,8 +33,11 @@ Cada actividad generada debe ceñirse al siguiente formato:
 ```
 
 ### 2. Generación por Mundo
-- **Mundo 1 (Números 1-10)**: Las actividades deben restringirse a los 8 tipos definidos en la especificación pedagógica: escuchar, reconocer, tocar, escribir, saltar, contar objetos físicos, reto con padres y QR.
-- **Dificultad Progresiva**: Dentro de un mismo mundo, la dificultad (1 al 5) debe aumentar de forma gradual (ej. nivel 1 tiene 2 distractores táctiles; nivel 3 tiene 5 distractores; nivel 5 requiere completar la secuencia numérica).
+- **Mundo 1 (Números 1-10)**: Las actividades deben constar de exactamente 50 retos combinados de forma secuencial y mezclada:
+  1. Introducción unitaria e interactiva (1 al 10 en orden, primeros 10 retos).
+  2. 40 retos mezclados aleatoriamente de: Conteo Visual, Trazado por puntos, Repetición oral, Conteo Auditivo (sonidos Web Audio), Ordenación Progresiva, Reto con padres y Actividades Móviles (Salto/QR).
+  3. Soporte para **Modo PC**: Excluir dinámicamente las actividades marcadas con `isMobileOnly: true` (saltos por giroscopio y códigos QR con cámara trasera) si el Modo PC está activado, reduciendo el total a 45 actividades fluidas e interactivas en pantalla.
+- **Dificultad Progresiva**: Dentro del mundo, la dificultad aumenta secuencialmente (desde la simple visualización de números individuales hasta conteo auditivo complejo de múltiples sonidos y ordenación total de 1 a 10).
 
 ### 3. Validación de Recursos Requeridos
 Antes de publicar una actividad en la API:

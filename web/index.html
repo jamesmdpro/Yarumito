@@ -30,6 +30,11 @@
         </div>
         <div class="header-controls">
             <button id="lang-toggle" class="lang-btn">ES / EN</button>
+            <label class="pc-mode-container" style="display:flex; align-items:center; gap:6px; cursor:pointer; font-size:0.85rem; font-weight:700; background:rgba(0,0,0,0.03); padding:6px 12px; border-radius:15px; border:1px solid rgba(0,0,0,0.05); user-select:none; color:var(--text-main); font-family:'Outfit',sans-serif;">
+                <input type="checkbox" id="pc-mode-check" style="cursor:pointer; width:16px; height:16px; accent-color:var(--color-green);">
+                <span id="pc-mode-label">💻 Modo PC</span>
+            </label>
+            <button id="login-nav-btn" class="login-nav-btn">🔑 Iniciar Sesión</button>
             <a href="#donar-section" class="donar-nav-btn" id="donar-nav-btn">❤️ Donar</a>
         </div>
     </header>
@@ -98,8 +103,14 @@
                     <div class="progress-tree-container">
                         <div class="tree-trunk-line"></div>
                         <div class="progress-tree-path" id="progress-tree-path">
-                            <!-- 8 Hojas/Nodos generados dinámicamente -->
+                            <!-- Hojas generadas dinámicamente -->
                         </div>
+                    </div>
+                    <!-- Controles de navegación del árbol (carrusel de 10 hojas) -->
+                    <div class="tree-pagination-controls" style="display:flex; align-items:center; justify-content:space-between; margin-top:15px; background:rgba(0,0,0,0.02); padding:8px 12px; border-radius:15px; border:1px solid rgba(0,0,0,0.05); width:100%; box-sizing:border-box; gap:5px;">
+                        <button id="btn-tree-prev" class="lang-btn" style="padding:5px 12px; font-size:0.9rem; font-weight:700; cursor:pointer; min-width:40px;">⬅️</button>
+                        <span id="tree-page-indicator" style="font-size:0.85rem; font-weight:800; color:var(--text-main); font-family:'Outfit',sans-serif; text-align:center; flex:1;">Etapa 1 de 5</span>
+                        <button id="btn-tree-next" class="lang-btn" style="padding:5px 12px; font-size:0.9rem; font-weight:700; cursor:pointer; min-width:40px;">➡️</button>
                     </div>
                 </div>
                 

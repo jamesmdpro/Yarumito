@@ -7,38 +7,35 @@ Esta guía detalla los pasos para configurar, ejecutar localmente y desplegar en
 ## 1. Despliegue Local (Desarrollo)
 
 ### Requisitos Previos
-- **Node.js** v18 o superior (para Web y Dashboard)
-- **Python** 3.10 o superior (para API Central)
-- **Flutter SDK** v3.10+ o **React Native CLI / Expo Go** (para App Móvil)
-- **PostgreSQL** y **MongoDB** instalados localmente o accesibles en la nube (ej. Supabase y MongoDB Atlas).
+- **Node.js** v18 o superior (para servir el Sitio Web con Vite)
+- **Python** 3.10 o superior (para la API Central)
+- **Base de datos (Opcional en MVP)**: PostgreSQL y MongoDB solo son necesarios en producción o cuando se implementen integraciones en la nube (ej. Supabase y MongoDB Atlas). Para el MVP local, la API almacena los datos en archivos JSON locales (`telemetry_errors.json`).
 
 ---
 
 ### Módulo 1: Sitio Web Informativo (`web/`)
 
+El frontend es una aplicación web estática (HTML, CSS y JS). Para servirla localmente y facilitar el desarrollo con recarga rápida, utilizamos **Vite**:
+
 1. Navegar al directorio del sitio web:
    ```bash
    cd web
    ```
-2. Instalar dependencias:
+2. Instalar el servidor de desarrollo local (Vite):
    ```bash
    npm install
    ```
-3. Crear un archivo de variables de entorno `.env.local`:
-   ```env
-   NEXT_PUBLIC_API_URL=http://localhost:8000
-   # Integración bilingüe por defecto
-   NEXT_PUBLIC_DEFAULT_LOCALE=es
-   ```
-4. Iniciar el servidor de desarrollo local:
+3. Iniciar el servidor de desarrollo local:
    ```bash
    npm run dev
    ```
-   *La web estará disponible en `http://localhost:3000`.*
+   *La web estará disponible en `http://localhost:3000` e interactuará automáticamente con la API local en `http://127.0.0.1:8000`.*
 
 ---
 
 ### Módulo 2: API Central en Python (`api-central/`)
+
+La API central se encarga de verificar códigos QR, simular telemetría y generar audios sintéticos TTS de forma local.
 
 1. Navegar al directorio de la API:
    ```bash
@@ -52,39 +49,22 @@ Esta guía detalla los pasos para configurar, ejecutar localmente y desplegar en
    # En macOS/Linux:
    source venv/bin/activate
    ```
-3. Instalar las dependencias:
+3. Instalar las dependencias requeridas (definidas en `requirements.txt`):
    ```bash
    pip install -r requirements.txt
    ```
-4. Configurar las variables de entorno `.env`:
-   ```env
-   DATABASE_URL=postgresql://user:pass@localhost:5432/yarumito_auth
-   MONGODB_URI=mongodb://localhost:27017/yarumito_telemetry
-   JWT_SECRET=tu_clave_secreta_aqui
-   ```
-5. Iniciar la API con Uvicorn (recarga automática activa):
+4. Iniciar la API con Uvicorn (con recarga automática activa):
    ```bash
    uvicorn main:app --reload --port 8000
    ```
-   *La documentación interactiva de la API estará disponible en `http://localhost:8000/docs`.*
+   *La API estará disponible en `http://localhost:8000` y su documentación interactiva en `http://localhost:8000/docs`.*
 
 ---
 
-### Módulo 3: Aplicación Móvil (`app-movil/`)
+### Módulo 3: Aplicación Móvil (Futura Fase)
 
-*Si se utiliza Flutter:*
-1. Navegar al directorio de la app:
-   ```bash
-   cd app-movil
-   ```
-2. Descargar los paquetes:
-   ```bash
-   flutter pub get
-   ```
-3. Ejecutar en un emulador o dispositivo real:
-   ```bash
-   flutter run
-   ```
+El MVP actual se ejecuta directamente en la Web. Posteriormente se empaquetará esta misma base de código usando **Capacitor** o se desarrollará una aplicación nativa dedicada bajo la carpeta `app-movil/` (usando Flutter o React Native).
+
 
 ---
 

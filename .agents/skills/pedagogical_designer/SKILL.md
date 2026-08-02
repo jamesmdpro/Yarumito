@@ -31,3 +31,15 @@ Este agente se especializa en crear, revisar y refinar el contenido didáctico d
 ### 4. Soporte Bilingüe (Bilingual Support)
 - Toda actividad debe redactarse de forma simétrica en **Español (ES)** y en **Inglés (EN)**.
 - El lenguaje debe ser extremadamente simple, utilizando palabras de alta frecuencia y frases cortas.
+
+### 5. Estructura Curricular Secuencial (Ej. Números 1-10)
+- Para la enseñanza elemental de conceptos matemáticos y numéricos, siempre se debe estructurar una secuencia detallada y amplia de actividades:
+  1. **Introducción Unitaria**: Explicación y reconocimiento secuencial de cada número (del 1 al 10 en orden, uno por actividad al inicio).
+  2. **Retos Mezclados y Multimodales (hasta 50 actividades)**: Mezclar de forma progresiva actividades de:
+     - **Conteo Visual**: Identificar cuántos elementos hay (ej. 1 a 5 manzanas) y seleccionar la opción correcta.
+     - **Trazar / Escribir**: Conectar puntos en orden para delinear e internalizar la grafía del número.
+     - **Contar Sonidos (Entrenamiento Auditivo)**: Escuchar golpes o ladridos N veces (generados con síntesis de audio) y seleccionar el número correspondiente.
+     - **Ejercicios de Ordenación**: Ordenar rangos dinámicos progresivos (1-3, 1-5, 1-7, 5-10, 1-10).
+     - **Reto con Padres (Offline)**: Desafíos conversacionales y de búsqueda física en familia (ej. buscar 3 cosas verdes).
+     - **Acciones Táctiles y de Movimiento (Móvil)**: Saltos capturados con acelerómetro o búsqueda con códigos QR.
+  3. **Adaptabilidad del Entorno (Modo PC / Modo Aula)**: Habilitar interruptores para filtrar actividades que requieran hardware específico (como giroscopio o cámara QR), permitiendo que el currículo se ajuste automáticamente a un modo 100% interactivo en pantalla para ordenadores portátiles de aula.
