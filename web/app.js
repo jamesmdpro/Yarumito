@@ -17,22 +17,30 @@ const state = {
     childName: "James",
     childAvatar: "🦊",
     currentActivityIndex: 0,
+    currentWorld: 1, // Mundo activo
+    worldProgress: {
+        1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0,
+        11: 0, 12: 0, 13: 0, 14: 0, 15: 0, 16: 0, 17: 0, 18: 0, 19: 0, 20: 0
+    },
     pcMode: false, // Modo PC desactivará retos móviles
-    currentTreePage: 0 // Página actual del árbol (carrusel de 10 hojas)
+    currentTreePage: 0, // Página actual del árbol (carrusel de 10 hojas)
+    voiceName: "", // Voz seleccionada por el usuario
+    voiceSpeed: 0.85, // Velocidad de la voz (default 0.85 pausada)
+    wrongAttempts: 0 // Intentos fallidos en la actividad activa
 };
 
 // Currículo de los 20 Mundos de Yarumito (Bilingüe)
 const worldsData = {
     es: [
         { num: 1, title: "Números (1-10)", desc: "Iniciación al concepto numérico, formas visuales y fonemas elementales.", unlocked: true },
-        { num: 2, title: "Conteo y Grupos", desc: "Aprende cardinalidad asociando grupos de frutas y animales.", unlocked: false },
-        { num: 3, title: "Geometría Básica", desc: "Identifica círculos, cuadrados y triángulos en tu entorno.", unlocked: false },
-        { num: 4, title: "Colores y Patrones", desc: "Clasificación cromática y seguimiento de secuencias lógicas.", unlocked: false },
-        { num: 5, title: "Suma Inicial", desc: "Introduce la unión sumando manzanas caídas del árbol.", unlocked: false },
-        { num: 6, title: "Resta Inicial", desc: "Aprende a restar separando y quitando elementos del nido.", unlocked: false },
-        { num: 7, title: "Orientación Espacial", desc: "Conceptos de arriba/abajo e izquierda/derecha con movimiento.", unlocked: false },
-        { num: 8, title: "Tamaños y Relaciones", desc: "Comparación de tamaños y relaciones de más y menos.", unlocked: false },
-        { num: 9, title: "Vocales y Fonemas", desc: "Discriminación auditiva y pronunciación de las vocales básicas.", unlocked: false },
+        { num: 2, title: "Vocales (A-U)", desc: "Reconocimiento de vocales, asociación de sonidos y práctica de trazo de la A a la U.", unlocked: false },
+        { num: 3, title: "Conteo y Grupos", desc: "Aprende cardinalidad asociando grupos de frutas y animales.", unlocked: false },
+        { num: 4, title: "Geometría Básica", desc: "Identifica círculos, cuadrados y triángulos en tu entorno.", unlocked: false },
+        { num: 5, title: "Colores y Patrones", desc: "Clasificación cromática y seguimiento de secuencias lógicas.", unlocked: false },
+        { num: 6, title: "Suma Inicial", desc: "Introduce la unión sumando manzanas caídas del árbol.", unlocked: false },
+        { num: 7, title: "Resta Inicial", desc: "Aprende a restar separando y quitando elementos del nido.", unlocked: false },
+        { num: 8, title: "Orientación Espacial", desc: "Conceptos de arriba/abajo e izquierda/derecha con movimiento.", unlocked: false },
+        { num: 9, title: "Tamaños y Relaciones", desc: "Comparación de tamaños y relaciones de más y menos.", unlocked: false },
         { num: 10, title: "Sílabas y Palabras", desc: "Construcción de palabras simples asociando sonidos.", unlocked: false },
         { num: 11, title: "Reconocer Emociones", desc: "Expresiones gestuales y entonación de la voz con la cámara.", unlocked: false },
         { num: 12, title: "Ritmo y Coordinación", desc: "Seguimiento de patrones rítmicos dando palmadas y saltos.", unlocked: false },
@@ -47,14 +55,14 @@ const worldsData = {
     ],
     en: [
         { num: 1, title: "Numbers (1-10)", desc: "Introduction to numbers, visual shapes, and elementary phonemes.", unlocked: true },
-        { num: 2, title: "Counting & Grouping", desc: "Learn cardinality by grouping fruits and animals together.", unlocked: false },
-        { num: 3, title: "Basic Geometry", desc: "Identify circles, squares, and triangles in your surroundings.", unlocked: false },
-        { num: 4, title: "Colores & Patterns", desc: "Color classification and visual sequencing.", unlocked: false },
-        { num: 5, title: "Intro to Addition", desc: "Introduce addition by uniting fallen apples from the tree.", unlocked: false },
-        { num: 6, title: "Intro to Subtraction", desc: "Learn subtraction by taking away items from the nest.", unlocked: false },
-        { num: 7, title: "Spatial Orientation", desc: "Concepts of up/down and left/right using device movement.", unlocked: false },
-        { num: 8, title: "Sizes & Comparisons", desc: "Comparing sizes and relationships of more and less.", unlocked: false },
-        { num: 9, title: "Vowels & Phonemes", desc: "Auditory discrimination and basic vowel pronunciation.", unlocked: false },
+        { num: 2, title: "Vowels (A-U)", desc: "Vowel recognition, sound association, and tracing practice from A to U.", unlocked: false },
+        { num: 3, title: "Counting & Grouping", desc: "Learn cardinality by grouping fruits and animals together.", unlocked: false },
+        { num: 4, title: "Basic Geometry", desc: "Identify circles, squares, and triangles in your surroundings.", unlocked: false },
+        { num: 5, title: "Colores & Patterns", desc: "Color classification and visual sequencing.", unlocked: false },
+        { num: 6, title: "Intro to Addition", desc: "Introduce addition by uniting fallen apples from the tree.", unlocked: false },
+        { num: 7, title: "Intro to Subtraction", desc: "Learn subtraction by taking away items from the nest.", unlocked: false },
+        { num: 8, title: "Spatial Orientation", desc: "Concepts of up/down and left/right using device movement.", unlocked: false },
+        { num: 9, title: "Sizes & Comparisons", desc: "Comparing sizes and relationships of more and less.", unlocked: false },
         { num: 10, title: "Syllables & Words", desc: "Building simple words by linking phoneme sounds.", unlocked: false },
         { num: 11, title: "Recognizing Emotions", desc: "Gestural expressions and voice pitch using the camera.", unlocked: false },
         { num: 12, title: "Rhythm & Coordination", desc: "Following rhythmic patterns by clapping and jumping.", unlocked: false },
@@ -296,14 +304,260 @@ function generateWorld1Activities() {
     };
 }
 
-const generatedWorldActivities = generateWorld1Activities();
+function generateWorld2Activities() {
+    const listES = [];
+    const listEN = [];
+    
+    // 1. Introducción Vocales A, E, I, O, U (5 actividades)
+    const vowels = ["A", "E", "I", "O", "U"];
+    vowels.forEach(v => {
+        listES.push({
+            id: `W2_INTRO_${v}`,
+            title: `Conoce la Vocal ${v}`,
+            icon: "🔤",
+            desc: `Toca la vocal ${v} para escuchar cómo suena y aprender su forma.`,
+            playAction: "intro",
+            data: { number: v }
+        });
+        listEN.push({
+            id: `W2_INTRO_${v}`,
+            title: `Meet Vowel ${v}`,
+            icon: "🔤",
+            desc: `Touch vowel ${v} to hear its sound and learn its shape.`,
+            playAction: "intro",
+            data: { number: v }
+        });
+    });
+    
+    // 2. Identificar Vocal Inicial (10 actividades mezcladas)
+    const vowelItems = [
+        { emoji: "✈️", vowel: "A", wordEs: "avión", wordEn: "airplane" },
+        { emoji: "🐘", vowel: "E", wordEs: "elefante", wordEn: "elephant" },
+        { emoji: "🏝️", vowel: "I", wordEs: "isla", wordEn: "island" },
+        { emoji: "🐻", vowel: "O", wordEs: "oso", wordEn: "bear" },
+        { emoji: "🍇", vowel: "U", wordEs: "uva", wordEn: "grapes" },
+        { emoji: "🐝", vowel: "A", wordEs: "abeja", wordEn: "bee" },
+        { emoji: "🌟", vowel: "E", wordEs: "estrella", wordEn: "star" },
+        { emoji: "🦎", vowel: "I", wordEs: "iguana", wordEn: "iguana" },
+        { emoji: "👁️", vowel: "O", wordEs: "ojo", wordEn: "eye" },
+        { emoji: "🦄", vowel: "U", wordEs: "unicornio", wordEn: "unicorn" }
+    ];
+    vowelItems.forEach((item, idx) => {
+        listES.push({
+            id: `W2_VISUAL_${idx}`,
+            title: `¿Con qué vocal empieza?`,
+            icon: "👀",
+            desc: `Observa el dibujo de la ${item.wordEs} (${item.emoji}) y selecciona con qué vocal comienza.`,
+            playAction: "count_visual",
+            data: { isVowelChoice: true, emoji: item.emoji, correctVowel: item.vowel, name: item.wordEs }
+        });
+        listEN.push({
+            id: `W2_VISUAL_${idx}`,
+            title: `What vowel does it start with?`,
+            icon: "👀",
+            desc: `Look at the picture of the ${item.wordEn} (${item.emoji}) and select the starting vowel.`,
+            playAction: "count_visual",
+            data: { isVowelChoice: true, emoji: item.emoji, correctVowel: item.vowel, name: item.wordEn }
+        });
+    });
+    
+    // 3. Escribir/Trazar Vocales (10 actividades: 5 mayúsculas, 5 minúsculas)
+    vowels.forEach(v => {
+        listES.push({
+            id: `W2_TRACE_${v}`,
+            title: `Trazar la Vocal ${v}`,
+            icon: "✏️",
+            desc: `Une los puntos en orden para escribir la letra ${v}.`,
+            playAction: "trace",
+            data: { number: v }
+        });
+        listEN.push({
+            id: `W2_TRACE_${v}`,
+            title: `Trace Vowel ${v}`,
+            icon: "✏️",
+            desc: `Touch the nodes in order to write letter ${v}.`,
+            playAction: "trace",
+            data: { number: v }
+        });
+    });
+    
+    const lowerVowels = ["a", "e", "i", "o", "u"];
+    lowerVowels.forEach(v => {
+        listES.push({
+            id: `W2_TRACE_${v}`,
+            title: `Trazar la Vocal ${v}`,
+            icon: "✏️",
+            desc: `Une los puntos en orden para escribir la letra ${v}.`,
+            playAction: "trace",
+            data: { number: v }
+        });
+        listEN.push({
+            id: `W2_TRACE_${v}`,
+            title: `Trace Vowel ${v}`,
+            icon: "✏️",
+            desc: `Touch the nodes in order to write letter ${v}.`,
+            playAction: "trace",
+            data: { number: v }
+        });
+    });
+    
+    // 4. Repite conmigo (5 actividades)
+    for (let i = 0; i < 5; i++) {
+        const vowel = vowels[i];
+        listES.push({
+            id: `W2_REPEAT_${vowel}`,
+            title: "Repite Conmigo",
+            icon: "🗣️",
+            desc: `El Árbol Sabio dirá la vocal ${vowel}. Presiona el micrófono y dila fuerte.`,
+            playAction: "repeat",
+            data: { number: vowel }
+        });
+        listEN.push({
+            id: `W2_REPEAT_${vowel}`,
+            title: "Repeat after Me",
+            icon: "🗣️",
+            desc: `The Wise Tree will say vowel ${vowel}. Press the mic and say it out loud.`,
+            playAction: "repeat",
+            data: { number: vowel }
+        });
+    }
+    
+    // 5. Ordenar vocales (5 actividades)
+    const vowelSortRanges = [
+        { start: "A", end: "I" },
+        { start: "I", end: "U" },
+        { start: "A", end: "E" },
+        { start: "E", end: "O" },
+        { start: "A", end: "U" }
+    ];
+    vowelSortRanges.forEach((range, idx) => {
+        listES.push({
+            id: `W2_SORT_${idx}`,
+            title: `Ordena las vocales`,
+            icon: "🔀",
+            desc: `Toca las vocales en orden alfabético de la ${range.start} a la ${range.end}.`,
+            playAction: "sort",
+            data: range
+        });
+        listEN.push({
+            id: `W2_SORT_${idx}`,
+            title: `Sort the vowels`,
+            icon: "🔀",
+            desc: `Touch the vowels in alphabetical order from ${range.start} to ${range.end}.`,
+            playAction: "sort",
+            data: range
+        });
+    });
+    
+    // 6. Retos con padres (5 actividades)
+    const parentRetosES = [
+        "Dile a tus papás las 5 vocales en orden (A, E, I, O, U).",
+        "Busca en la habitación un objeto que empiece con la letra A y muéstraselo a tus papás.",
+        "Dile a tus papás 3 palabras que comiencen con la letra E.",
+        "Canta con tus papás la canción de las vocales.",
+        "Dibuja con el dedo en la espalda de papá o mamá la vocal O para que la adivinen."
+    ];
+    const parentRetosEN = [
+        "Say the 5 vowels in order (A, E, I, O, U) to your parents.",
+        "Find an object in the room that starts with letter A and show it to your parents.",
+        "Tell your parents 3 words that start with letter E.",
+        "Sing the vowel song together with your parents.",
+        "Draw letter O with your finger on your parent's back and have them guess it."
+    ];
+    for (let i = 0; i < 5; i++) {
+        listES.push({
+            id: `W2_PARENT_${i}`,
+            title: "Reto con Padres",
+            icon: "👨‍👩‍👦",
+            desc: parentRetosES[i],
+            playAction: "parent"
+        });
+        listEN.push({
+            id: `W2_PARENT_${i}`,
+            title: "Parent Challenge",
+            icon: "👨‍👩‍👦",
+            desc: parentRetosEN[i],
+            playAction: "parent"
+        });
+    }
+    
+    // 7. Contar sonidos de vocales (5 actividades)
+    for (let i = 0; i < 5; i++) {
+        const vowel = vowels[i];
+        const count = (i % 3) + 2; // Rango 2 a 4
+        listES.push({
+            id: `W2_SOUND_${vowel}`,
+            title: "Cuenta las Vocales",
+            icon: "👂",
+            desc: `Escucha atentamente cuántas veces el Árbol Sabio pronuncia la vocal ${vowel}.`,
+            playAction: "count_sounds",
+            data: { isVowelSpeech: true, vowel: vowel, count: count, emoji: "🗣️", name: `letra ${vowel}` }
+        });
+        listEN.push({
+            id: `W2_SOUND_${vowel}`,
+            title: "Count the Vowels",
+            icon: "👂",
+            desc: `Listen carefully to how many times the Wise Tree pronounces vowel ${vowel}.`,
+            playAction: "count_sounds",
+            data: { isVowelSpeech: true, vowel: vowel, count: count, emoji: "🗣️", name: `letter ${vowel}` }
+        });
+    }
+    
+    // 8. Actividades Móviles (Movimiento y QR) (5 actividades)
+    const mobileActsES = [
+        { id: "W2_MOB_1", title: "Salta con la letra A", icon: "🦘", desc: "Sostén tu celular y da 3 saltos cada vez que escuches la letra A.", playAction: "jump", data: { count: 3 } },
+        { id: "W2_MOB_2", title: "Busca la Vocal E", icon: "📷", desc: "Busca la tarjeta con la vocal E en la habitación y escanea su código QR.", playAction: "qr", data: { target: "E" } },
+        { id: "W2_MOB_3", title: "Salta con la letra I", icon: "🦘", desc: "Sostén tu celular y da 4 saltos rápidos con la vocal I.", playAction: "jump", data: { count: 4 } },
+        { id: "W2_MOB_4", title: "Busca la Vocal O", icon: "📷", desc: "Busca la tarjeta con la vocal O en la habitación y escanea su código QR.", playAction: "qr", data: { target: "O" } },
+        { id: "W2_MOB_5", title: "Busca la Vocal U", icon: "📷", desc: "Busca la tarjeta con la vocal U en la habitación y escanea su código QR.", playAction: "qr", data: { target: "U" } }
+    ];
+    const mobileActsEN = [
+        { id: "W2_MOB_1", title: "Jump with letter A", icon: "🦘", desc: "Hold your phone and do 3 jumps when you hear letter A.", playAction: "jump", data: { count: 3 } },
+        { id: "W2_MOB_2", title: "Find Vowel E", icon: "📷", desc: "Find the printed card for vowel E in the room and scan its QR.", playAction: "qr", data: { target: "E" } },
+        { id: "W2_MOB_3", title: "Jump with letter I", icon: "🦘", desc: "Hold your phone and do 4 quick jumps with vowel I.", playAction: "jump", data: { count: 4 } },
+        { id: "W2_MOB_4", title: "Find Vowel O", icon: "📷", desc: "Find the printed card for vowel O in the room and scan its QR.", playAction: "qr", data: { target: "O" } },
+        { id: "W2_MOB_5", title: "Find Vowel U", icon: "📷", desc: "Find the printed card for vowel U in the room and scan its QR.", playAction: "qr", data: { target: "U" } }
+    ];
+    for (let i = 0; i < 5; i++) {
+        listES.push({ ...mobileActsES[i], isMobileOnly: true });
+        listEN.push({ ...mobileActsEN[i], isMobileOnly: true });
+    }
+    
+    // Mezclar las actividades manteniendo la Introducción al inicio (primeros 5 puestos)
+    const introES = listES.slice(0, 5);
+    const restES = listES.slice(5);
+    const introEN = listEN.slice(0, 5);
+    const restEN = listEN.slice(5);
+    
+    const seedRandom = (seed) => {
+        let x = Math.sin(seed++) * 10000;
+        return x - Math.floor(x);
+    };
+    
+    const indices = Array.from({ length: restES.length }, (_, i) => i);
+    for (let i = indices.length - 1; i > 0; i--) {
+        const j = Math.floor(seedRandom(i + 88) * (i + 1));
+        [indices[i], indices[j]] = [indices[j], indices[i]];
+    }
+    
+    const shuffledRestES = indices.map(i => restES[i]);
+    const shuffledRestEN = indices.map(i => restEN[i]);
+    
+    return {
+        es: [...introES, ...shuffledRestES],
+        en: [...introEN, ...shuffledRestEN]
+    };
+}
+
 const worldActivities = {
-    es: generatedWorldActivities.es,
-    en: generatedWorldActivities.en
+    1: generateWorld1Activities(),
+    2: generateWorld2Activities()
 };
 
 function getActiveActivities() {
-    const all = worldActivities[state.locale];
+    const worldNum = state.currentWorld || 1;
+    const worldData = worldActivities[worldNum] || worldActivities[1];
+    const all = worldData[state.locale];
     if (state.pcMode) {
         return all.filter(act => !act.isMobileOnly);
     }
@@ -578,6 +832,83 @@ function updateLanguageUI() {
         btn.innerText = `${t.scanBtnPrefix} [${number}]`;
     });
     
+    // Traducir Botones de la Barra de Navegación
+    document.getElementById("nav-landing-btn").innerText = state.locale === "es" ? "🏠 Inicio" : "🏠 Home";
+    document.getElementById("nav-game-btn").innerText = state.locale === "es" ? "🎮 Mi Árbol" : "🎮 My Tree";
+    document.getElementById("nav-blog-btn").innerText = state.locale === "es" ? "📰 Blog" : "📰 Blog";
+    
+    // Traducir Sección de Propósito e Información Pedagógica (Acerca de)
+    document.getElementById("about-purpose-title").innerText = state.locale === "es" ? "Un espacio seguro diseñado para la neurodiversidad" : "A safe space designed for neurodiversity";
+    document.getElementById("about-purpose-desc").innerText = state.locale === "es" ? 
+        "Yarumito está especialmente dirigido a niños con dificultades de aprendizaje y neurodiversidad (TDAH, Autismo, Dislexia, Discalculia). El motor pedagógico evalúa la interacción cognitiva de manera dinámica, ignorando la edad cronológica para adaptarse 100% al ritmo del niño mediante juegos sin límites de tiempo, presiones competitivas ni penalizaciones por fallar." :
+        "Yarumito is specially designed for children with learning difficulties and neurodiversity (ADHD, Autism, Dyslexia, Dyscalculia). The pedagogical engine evaluates cognitive interaction dynamically, ignoring chronological age to adapt 100% to the child's pace through games with no time limits, competitive pressures, or penalties for failing.";
+    document.getElementById("about-interaction-title").innerText = state.locale === "es" ? "La tecnología y el juego físico en armonía" : "Technology and physical play in harmony";
+    document.getElementById("about-interaction-desc").innerText = state.locale === "es" ? 
+        "Nuestra filosofía de aprendizaje une lo mejor de la tecnología interactiva con actividades físicas fuera de pantalla para combatir el sedentarismo y la sobreestimulación visual." :
+        "Our learning philosophy unites the best of interactive technology with screen-free physical activities to combat sedentary behavior and visual overstimulation.";
+        
+    document.getElementById("activity-type-auditory").innerText = state.locale === "es" ? "Entrenamiento Auditivo" : "Auditory Training";
+    document.getElementById("activity-type-auditory-desc").innerText = state.locale === "es" ? 
+        "Contar y discriminar sonidos en tiempo real (como ladridos de perritos o campanas) para fortalecer la atención." :
+        "Counting and discriminating sounds in real time (like dog barks or bells) to strengthen attention span.";
+    document.getElementById("activity-type-tracing").innerText = state.locale === "es" ? "Trazado Visomotor" : "Visuomotor Tracing";
+    document.getElementById("activity-type-tracing-desc").innerText = state.locale === "es" ? 
+        "Guiar trazos uniendo puntos en pantalla para estimular el control de la grafía y la motricidad fina." :
+        "Guiding strokes by connecting dots on screen to stimulate handwriting control and fine motor skills.";
+    document.getElementById("activity-type-movement").innerText = state.locale === "es" ? "Movimiento Físico" : "Physical Movement";
+    document.getElementById("activity-type-movement-desc").innerText = state.locale === "es" ? 
+        "Retos donde el niño salta con el móvil o explora su habitación escaneando tarjetas QR impresas en casa." :
+        "Challenges where the child jumps with the mobile or explores their room scanning printed QR cards at home.";
+    document.getElementById("activity-type-parental").innerText = state.locale === "es" ? "Desafíos en Familia" : "Family Challenges";
+    document.getElementById("activity-type-parental-desc").innerText = state.locale === "es" ? 
+        "Pausas lúdicas supervisadas fuera de la pantalla que fomentan la socialización con tutores o padres." :
+        "Supervised play breaks off-screen that encourage socialization with tutors or parents.";
+
+    // Traducir Marcador de Posición para No Registrados
+    document.getElementById("unreg-title").innerText = state.locale === "es" ? "Tu Árbol de Progreso Personalizado" : "Your Personalized Progress Tree";
+    document.getElementById("unreg-desc").innerText = state.locale === "es" ? 
+        "Para ver el avance del Mundo 1, ver germinar tu semilla del Árbol Sabio, subir por sus hojas y desbloquear los 20 mundos de aprendizaje adaptativo, necesitas iniciar sesión o registrar una cuenta de tutor." :
+        "To see the progress of World 1, watch your Wise Tree seed germinate, climb through its leaves, and unlock the 20 worlds of adaptive learning, you need to sign in or register a tutor account.";
+    document.getElementById("btn-unreg-login").innerText = state.locale === "es" ? "🔑 Registrarse o Iniciar Sesión" : "🔑 Register or Sign In";
+    document.getElementById("btn-unreg-back").innerText = state.locale === "es" ? "🏠 Volver al Inicio" : "🏠 Back to Home";
+
+    // Traducir Módulo de Blog
+    document.getElementById("blog-title").innerText = state.locale === "es" ? "📰 Blog de la Comunidad Yarumito" : "📰 Yarumito Community Blog";
+    document.getElementById("blog-subtitle").innerText = state.locale === "es" ? 
+        "Artículos sobre aprendizaje adaptativo, consejos de crianza y guías pedagógicas preparadas por expertos." :
+        "Articles on adaptive learning, parenting tips, and pedagogical guides prepared by experts.";
+    const btnBack = document.getElementById("btn-back-to-blog");
+    if (btnBack) btnBack.innerText = state.locale === "es" ? "⬅️ Volver a los artículos" : "⬅️ Back to articles";
+    const commTitle = document.getElementById("comments-section-title");
+    if (commTitle) commTitle.innerText = state.locale === "es" ? "Comentarios de la Comunidad" : "Community Comments";
+    const addCommTitle = document.getElementById("add-comment-title");
+    if (addCommTitle) addCommTitle.innerText = state.locale === "es" ? "Escribe tu comentario" : "Write your comment";
+    const nameInput = document.getElementById("comment-author-name");
+    if (nameInput) nameInput.placeholder = state.locale === "es" ? "Tu Nombre / Apodo" : "Your Name / Nickname";
+    const emailInput = document.getElementById("comment-author-email");
+    if (emailInput) emailInput.placeholder = state.locale === "es" ? "Tu Correo (No se publica)" : "Your Email (Not published)";
+    const textInput = document.getElementById("comment-text-content");
+    if (textInput) textInput.placeholder = state.locale === "es" ? "Comparte tus ideas, experiencias o preguntas sobre este artículo..." : "Share your ideas, experiences, or questions about this article...";
+
+    // Traducir Formulario de Reporte de Actividad
+    const toggleFbBtn = document.getElementById("btn-toggle-feedback");
+    if (toggleFbBtn) toggleFbBtn.innerText = state.locale === "es" ? "⚠️ Reportar error o sugerencia" : "⚠️ Report error or suggestion";
+    const fbHeader = document.querySelector("#feedback-report-box h4");
+    if (fbHeader) fbHeader.innerText = state.locale === "es" ? "Reportar problema / Recomendación" : "Report issue / Recommendation";
+    const fbForm = document.getElementById("activity-feedback-form");
+    if (fbForm) {
+        fbForm.querySelector("label[for='feedback-type']").innerText = state.locale === "es" ? "Tipo de reporte" : "Report type";
+        fbForm.querySelector("label[for='feedback-desc']").innerText = state.locale === "es" ? "Descripción" : "Description";
+        fbForm.querySelector("textarea").placeholder = state.locale === "es" ? "Cuéntanos qué falló o qué sugieres..." : "Tell us what failed or what you suggest...";
+        fbForm.querySelector("button[type='submit']").innerText = state.locale === "es" ? "Enviar reporte" : "Submit report";
+        const optMal = fbForm.querySelector("option[value='malfuncionamiento']");
+        if (optMal) optMal.innerText = state.locale === "es" ? "❌ Mal funcionamiento (Error visual/audio)" : "❌ Malfunction (Visual/audio error)";
+        const optRec = fbForm.querySelector("option[value='recomendacion']");
+        if (optRec) optRec.innerText = state.locale === "es" ? "💡 Recomendación / Sugerencia pedagógica" : "💡 Recommendation / Pedagogical suggestion";
+    }
+    const fbSuccess = document.getElementById("feedback-report-success");
+    if (fbSuccess) fbSuccess.innerText = state.locale === "es" ? "¡Muchas gracias! Tu reporte ha sido guardado." : "Thank you so much! Your report has been saved.";
+
     // Re-renderizar mundos y catálogo con el nuevo idioma
     renderWorldsShowcase();
     renderAudioCatalogList();
@@ -604,8 +935,10 @@ function renderWorldsShowcase() {
         const card = document.createElement("div");
         card.classList.add("world-card");
         
-        // El Mundo 2 se desbloquea si el niño completa las 8 actividades de Mundo 1
-        const isWorldUnlocked = world.num === 1 || (world.num === 2 && state.currentActivityIndex >= 8);
+        // El Mundo 2 se desbloquea si el niño completa al menos 8 actividades del Mundo 1
+        const isWorldUnlocked = world.num === 1 || 
+            (world.num === 2 && (state.worldProgress[1] >= 8 || world.unlocked)) || 
+            (world.num > 2 && (state.worldProgress[world.num - 1] >= 8 || world.unlocked));
         
         if (!isWorldUnlocked) {
             card.classList.add("locked");
@@ -632,16 +965,24 @@ function renderWorldsShowcase() {
             speakText(`${title}. ${desc}`);
         });
 
-        // Listener para abrir Mundo 1 o dar alerta en Mundos bloqueados
+        // Listener para abrir Mundo o dar alerta en Mundos bloqueados
         card.addEventListener("click", () => {
             if (isWorldUnlocked) {
-                if (world.num === 1) {
-                    renderWorld1Activities();
-                    document.getElementById("world-activities-modal").classList.add("active");
-                    speakText(t.actModalTitle);
-                } else {
-                    alert(state.locale === "es" ? "¡Felicidades! Iniciando el Mundo 2." : "Congratulations! Starting World 2.");
-                }
+                state.currentWorld = world.num;
+                state.currentActivityIndex = state.worldProgress[world.num] || 0;
+                saveLocalState();
+                
+                renderProgressTree();
+                renderActiveActivity();
+                
+                renderWorldActivities();
+                document.getElementById("world-activities-modal").classList.add("active");
+                
+                const worldData = worldsData[state.locale].find(w => w.num === world.num);
+                const voiceTitle = state.locale === "es" ? 
+                    `Actividades de ${worldData ? worldData.title : `Mundo ${world.num}`}` :
+                    `Activities for ${worldData ? worldData.title : `World ${world.num}`}`;
+                speakText(voiceTitle);
             } else {
                 speakText(t.lockedWarning);
                 alert(t.lockedWarning);
@@ -653,11 +994,20 @@ function renderWorldsShowcase() {
 }
 
 // ==========================================
-// 3b. Modal de Actividades detalladas del Mundo 1
+// 3b. Modal de Actividades detalladas del Mundo Seleccionado
 // ==========================================
-function renderWorld1Activities() {
+function renderWorldActivities() {
     const container = document.getElementById("activities-grid-container");
     if (!container) return;
+    
+    // Actualizar dinámicamente el título del modal
+    const modalTitle = document.getElementById("act-modal-title");
+    if (modalTitle) {
+        const worldData = worldsData[state.locale].find(w => w.num === state.currentWorld);
+        modalTitle.innerText = state.locale === "es" ? 
+            `🎮 Actividades: ${worldData ? worldData.title : `Mundo ${state.currentWorld}`}` : 
+            `🎮 Activities: ${worldData ? worldData.title : `World ${state.currentWorld}`}`;
+    }
     
     container.innerHTML = "";
     const activities = getActiveActivities();
@@ -666,7 +1016,7 @@ function renderWorld1Activities() {
         const actCard = document.createElement("div");
         actCard.classList.add("activity-card");
         
-        // Se desbloquean secuencialmente: sólo si su índice es <= al progreso actual
+        // Se desbloquean secuencialmente: sólo si su índice es <= al progreso actual del mundo
         const isActUnlocked = idx <= state.currentActivityIndex;
         if (!isActUnlocked) {
             actCard.style.opacity = "0.5";
@@ -742,7 +1092,16 @@ function speakText(text) {
     
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = state.locale === "es" ? "es-ES" : "en-US";
-    utterance.rate = 0.85; 
+    utterance.rate = typeof state.voiceSpeed === "number" ? state.voiceSpeed : 0.85;
+    
+    if (state.voiceName) {
+        const voices = window.speechSynthesis.getVoices();
+        const selectedVoice = voices.find(v => v.name === state.voiceName);
+        if (selectedVoice) {
+            utterance.voice = selectedVoice;
+        }
+    }
+    
     window.speechSynthesis.speak(utterance);
 }
 
@@ -1032,14 +1391,18 @@ function setupModales() {
                 state.childName = "James";
                 state.childAvatar = "🦊";
                 state.currentActivityIndex = 0;
+                state.currentWorld = 1;
+                state.worldProgress = {
+                    1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0,
+                    11: 0, 12: 0, 13: 0, 14: 0, 15: 0, 16: 0, 17: 0, 18: 0, 19: 0, 20: 0
+                };
                 state.firstActivityCompleted = false;
                 
                 localStorage.removeItem("yarumito_logged_email");
                 localStorage.removeItem("yarumito_state");
                 
-                // Mostrar sección libre, ocultar zona de juego
-                document.getElementById("game-play-zone").style.display = "none";
-                document.getElementById("jugar-section").style.display = "block";
+                // Redireccionar a la landing page
+                showPage("landing");
                 
                 // Resetear el feedback de la actividad libre
                 const feedbackBox = document.getElementById("free-activity-feedback");
@@ -1083,7 +1446,12 @@ function setupModales() {
             tutorName: tutorName,
             childName: childName,
             childAvatar: avatar,
-            currentActivityIndex: 0
+            currentActivityIndex: 0,
+            currentWorld: 1,
+            worldProgress: {
+                1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0,
+                11: 0, 12: 0, 13: 0, 14: 0, 15: 0, 16: 0, 17: 0, 18: 0, 19: 0, 20: 0
+            }
         };
         localStorage.setItem("yarumito_users", JSON.stringify(users));
         localStorage.setItem("yarumito_logged_email", tutorEmail);
@@ -1092,6 +1460,11 @@ function setupModales() {
         state.childAvatar = avatar;
         state.isRegistered = true;
         state.currentActivityIndex = 0; 
+        state.currentWorld = 1;
+        state.worldProgress = {
+            1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0,
+            11: 0, 12: 0, 13: 0, 14: 0, 15: 0, 16: 0, 17: 0, 18: 0, 19: 0, 20: 0
+        };
         saveLocalState();
         
         const cardBody = regModal.querySelector(".modal-body");
@@ -1106,9 +1479,8 @@ function setupModales() {
         document.getElementById("start-ecosystem-btn").addEventListener("click", () => {
             regModal.classList.remove("active");
             
-            // Ocultar sección inicial y mostrar zona de juego
-            document.getElementById("jugar-section").style.display = "none";
-            document.getElementById("game-play-zone").style.display = "block";
+            // Mostrar interfaz de juego activo
+            showPage("game");
             
             // Actualizar datos del badge de perfil
             document.getElementById("child-badge-avatar").innerText = state.childAvatar;
@@ -1141,7 +1513,12 @@ function setupModales() {
             // Cargar datos en el estado
             state.childName = user.childName;
             state.childAvatar = user.childAvatar;
-            state.currentActivityIndex = typeof user.currentActivityIndex === "number" ? user.currentActivityIndex : 0;
+            state.currentWorld = user.currentWorld || 1;
+            state.worldProgress = user.worldProgress || {
+                1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0,
+                11: 0, 12: 0, 13: 0, 14: 0, 15: 0, 16: 0, 17: 0, 18: 0, 19: 0, 20: 0
+            };
+            state.currentActivityIndex = typeof state.worldProgress[state.currentWorld] === "number" ? state.worldProgress[state.currentWorld] : 0;
             state.isRegistered = true;
             state.firstActivityCompleted = true;
             
@@ -1150,9 +1527,8 @@ function setupModales() {
             
             regModal.classList.remove("active");
             
-            // Ocultar juego libre y mostrar la Zona de Juego
-            document.getElementById("jugar-section").style.display = "none";
-            document.getElementById("game-play-zone").style.display = "block";
+            // Mostrar interfaz de juego activo
+            showPage("game");
             
             // Renderizar datos del perfil
             document.getElementById("child-badge-avatar").innerText = state.childAvatar;
@@ -1218,6 +1594,583 @@ function setupDonations() {
 }
 
 // ==========================================
+// 9b. Datos y Lógica del Blog de Comunidad
+// ==========================================
+const blogPosts = {
+    es: [
+        {
+            id: "post_1",
+            title: "La Neurodiversidad en el Aprendizaje Infantil",
+            tag: "Pedagogía",
+            date: "2026-08-01",
+            desc: "Descubre cómo Yarumito ignora la edad cronológica para adaptarse al ritmo cognitivo individual de cada niño.",
+            content: `
+                <p>El cerebro infantil se desarrolla de formas diversas. Para los niños con TDAH, autismo o dificultades específicas del aprendizaje, los métodos de evaluación tradicionales basados en exámenes rígidos pueden resultar estresantes y sumamente desmotivadores.</p>
+                <p>En Yarumito, eliminamos las presiones competitivas. Nuestra plataforma utiliza la inteligencia artificial no para calificar ni juzgar, sino para construir un andamiaje educativo suave y motivador adaptado a cada perfil único.</p>
+                <blockquote>La neurodiversidad no es un trastorno que deba corregirse en un aula rígida, sino un ritmo de aprendizaje natural que debe ser acompañado y respetado con amor y paciencia.</blockquote>
+                <p>Al centrar la interacción en entradas múltiples (audio, voz, tacto) y respetar el tiempo del niño, logramos una experiencia que previene la frustración y promueve el amor por el conocimiento.</p>
+            `,
+            defaultComments: [
+                { author: "Ana Ramos", text: "Excelente iniciativa. El hecho de que adapte el ritmo a niños neurodivergentes es un alivio para nosotros los padres.", date: "2026-08-01 14:32" },
+                { author: "Dr. Roberto Silva", text: "Como terapeuta, aprecio mucho el andamiaje progresivo sin puntuaciones negativas. ¡Buen trabajo!", date: "2026-08-02 09:12" }
+            ]
+        },
+        {
+            id: "post_2",
+            title: "El Poder de los Retos Físicos y Sensoriales",
+            tag: "Juego Activo",
+            date: "2026-07-28",
+            desc: "La importancia de combinar la pantalla con el movimiento. ¿Por qué incluimos saltos y búsqueda de códigos QR?",
+            content: `
+                <p>Pasar demasiado tiempo frente a una pantalla inmóvil puede ser perjudicial para el desarrollo motor de los niños. Por eso Yarumito fomenta el juego activo y la exploración del entorno físico.</p>
+                <p>A través de actividades híbridas como saltar físicamente o buscar tarjetas con códigos QR en la habitación, logramos que la tecnología sirva como un puente hacia el movimiento y la interacción familiar real.</p>
+                <p>Los estudios demuestran que la actividad física ligera activa áreas prefrontales del cerebro que facilitan la concentración y retención de conceptos lógicos y numéricos.</p>
+            `,
+            defaultComments: [
+                { author: "Carlos Gómez", text: "A mi hija le encantó saltar con el teléfono. Se divirtió mucho buscando los números en la sala.", date: "2026-07-29 11:20" }
+            ]
+        },
+        {
+            id: "post_3",
+            title: "Guía para Padres: Acompañamiento sin Pantallas",
+            tag: "Familia",
+            date: "2026-07-15",
+            desc: "Ideas prácticas para continuar el aprendizaje de Yarumito en la vida cotidiana de tu hogar.",
+            content: `
+                <p>El aprendizaje adaptativo no termina cuando se apaga la tablet o la computadora. Como familias, podemos integrar dinámicas de conteo y fonética en las actividades cotidianas del hogar.</p>
+                <p>Esta guía te brinda consejos sencillos: desde contar manzanas mientras preparan la cena, contar escalones al subir, hasta asociar sonidos de la naturaleza al caminar por el parque.</p>
+                <blockquote>Integrar el juego numérico en la rutina diaria refuerza las conexiones neuronales de manera orgánica y divertida.</blockquote>
+            `,
+            defaultComments: [
+                { author: "Lucía Fernández", text: "Los consejos para contar escalones en casa nos sirvieron mucho esta semana. ¡Gracias por la guía!", date: "2026-07-16 16:45" }
+            ]
+        }
+    ],
+    en: [
+        {
+            id: "post_1",
+            title: "Neurodiversity in Early Childhood Learning",
+            tag: "Pedagogy",
+            date: "2026-08-01",
+            desc: "Discover how Yarumito ignores chronological age to adapt to the individual cognitive pace of each child.",
+            content: `
+                <p>The child's brain develops in diverse ways. For children with ADHD, autism, or specific learning difficulties, traditional rigid testing methods can be stressful and highly demotivating.</p>
+                <p>At Yarumito, we eliminate competitive pressure. Our platform uses artificial intelligence not to grade or judge, but to build a gentle and motivating educational scaffolding tailored to each unique profile.</p>
+                <blockquote>Neurodiversity is not a disorder to be corrected, but a natural pace of learning that must be accompanied and respected with love and patience.</blockquote>
+                <p>By centering interaction on multiple inputs (audio, voice, touch) and respecting the child's timing, we achieve an experience that prevents frustration and promotes a love for learning.</p>
+            `,
+            defaultComments: [
+                { author: "Ann Ramos", text: "Excellent initiative. Adapting to neurodivergent kids' pace is a huge relief for us parents.", date: "2026-08-01 14:32" },
+                { author: "Dr. Robert Silva", text: "As a therapist, I highly appreciate the progressive scaffolding without negative scores. Good job!", date: "2026-08-02 09:12" }
+            ]
+        },
+        {
+            id: "post_2",
+            title: "The Power of Physical and Sensory Challenges",
+            tag: "Active Play",
+            date: "2026-07-28",
+            desc: "The importance of combining screens with physical movement. Why do we include jumping and QR card searches?",
+            content: `
+                <p>Spending too much time in front of an immobile screen can be harmful to children's motor development. That is why Yarumito encourages active play and physical exploration.</p>
+                <p>Through hybrid activities like physically jumping or searching for printed QR cards in the room, we make technology serve as a bridge to physical movement and real family interaction.</p>
+                <p>Studies show that light physical activity activates prefrontal brain areas that facilitate concentration and retention of logical and mathematical concepts.</p>
+            `,
+            defaultComments: [
+                { author: "Charles Gomez", text: "My daughter loved jumping with the phone. She had a lot of fun searching for numbers in the living room.", date: "2026-07-29 11:20" }
+            ]
+        },
+        {
+            id: "post_3",
+            title: "Parent Guide: Screen-Free Accompaniment",
+            tag: "Family",
+            date: "2026-07-15",
+            desc: "Practical ideas to continue Yarumito's learning in the daily life of your home.",
+            content: `
+                <p>Adaptive learning does not end when the tablet or computer is turned off. As families, we can integrate counting and phonics into daily household routines.</p>
+                <p>This guide gives you simple tips: from counting apples while cooking dinner, counting steps while climbing, to associating nature sounds while walking in the park.</p>
+                <blockquote>Integrating number play into daily routines reinforces neural connections in an organic and fun way.</blockquote>
+            `,
+            defaultComments: [
+                { author: "Lucy Fernandez", text: "The tips for counting steps at home were super helpful this week. Thanks for the guide!", date: "2026-07-16 16:45" }
+            ]
+        }
+    ]
+};
+
+// --- NAVEGACIÓN Y CAMBIO DE PÁGINAS ---
+function showPage(pageId) {
+    const sections = {
+        landing: [
+            document.querySelector(".hero-section"),
+            document.getElementById("jugar-section"),
+            document.getElementById("about-yarumito-section"),
+            document.querySelector(".expandable-info"),
+            document.getElementById("donar-section"),
+            document.querySelector(".two-column-layout")
+        ],
+        game: [
+            document.getElementById("game-placeholder-zone"),
+            document.getElementById("game-play-zone"),
+            document.querySelector(".worlds-showcase")
+        ],
+        blog: [
+            document.getElementById("blog-section")
+        ]
+    };
+
+    // Ocultar todas las secciones
+    Object.values(sections).flat().forEach(sec => {
+        if (sec) sec.style.display = "none";
+    });
+
+    // Desactivar botones visuales del navbar
+    document.querySelectorAll(".nav-link-btn").forEach(btn => {
+        btn.classList.remove("active");
+    });
+
+    // Mostrar las secciones correspondientes a la página seleccionada
+    if (pageId === "landing") {
+        document.getElementById("nav-landing-btn").classList.add("active");
+        
+        // Mostrar elementos de landing
+        sections.landing.forEach(sec => {
+            if (sec) {
+                // El juego libre se oculta si ya se registró
+                if (sec.id === "jugar-section" && state.isRegistered) {
+                    sec.style.display = "none";
+                } else {
+                    sec.style.display = "block";
+                }
+            }
+        });
+    } else if (pageId === "game") {
+        document.getElementById("nav-game-btn").classList.add("active");
+        
+        if (state.isRegistered) {
+            // Mostrar interfaz de juego activo
+            const playZone = document.getElementById("game-play-zone");
+            const showcase = document.querySelector(".worlds-showcase");
+            if (playZone) playZone.style.display = "block";
+            if (showcase) showcase.style.display = "block";
+            
+            // Renderizar dinámicamente según el estado actual cargado
+            renderProgressTree();
+            renderActiveActivity();
+            renderWorldsShowcase();
+        } else {
+            // Mostrar placeholder de registro requerido
+            const placeholder = document.getElementById("game-placeholder-zone");
+            if (placeholder) placeholder.style.display = "block";
+        }
+    } else if (pageId === "blog") {
+        document.getElementById("nav-blog-btn").classList.add("active");
+        const blogSec = document.getElementById("blog-section");
+        if (blogSec) {
+            blogSec.style.display = "block";
+            renderBlogList();
+        }
+    }
+    
+    // Hacer scroll arriba
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function setupNavigation() {
+    document.getElementById("nav-landing-btn").addEventListener("click", () => showPage("landing"));
+    document.getElementById("nav-game-btn").addEventListener("click", () => showPage("game"));
+    document.getElementById("nav-blog-btn").addEventListener("click", () => showPage("blog"));
+    
+    // Botones del placeholder de no registrado
+    document.getElementById("btn-unreg-login").addEventListener("click", () => {
+        const modal = document.getElementById("register-modal");
+        if (modal) modal.classList.add("active");
+    });
+    document.getElementById("btn-unreg-back").addEventListener("click", () => showPage("landing"));
+}
+
+function setupVoiceSettings() {
+    const modal = document.getElementById("voice-settings-modal");
+    const openBtn = document.getElementById("btn-voice-settings");
+    const closeBtn = document.getElementById("close-voice-settings-btn");
+    const voiceSelect = document.getElementById("voice-select");
+    const speedSlider = document.getElementById("voice-speed-slider");
+    const speedVal = document.getElementById("voice-speed-val");
+    const testBtn = document.getElementById("btn-test-voice");
+
+    if (!modal || !openBtn || !closeBtn || !voiceSelect || !speedSlider || !speedVal || !testBtn) return;
+
+    // Abrir/Cerrar Modal
+    openBtn.addEventListener("click", () => {
+        modal.classList.add("active");
+        populateVoicesList();
+    });
+    closeBtn.addEventListener("click", () => modal.classList.remove("active"));
+    modal.addEventListener("click", (e) => {
+        if (e.target === modal) modal.classList.remove("active");
+    });
+
+    // Función para poblar la lista de voces
+    const populateVoicesList = () => {
+        const voices = window.speechSynthesis.getVoices();
+        voiceSelect.innerHTML = "";
+        
+        // Filtrar voces del idioma actual (español o inglés)
+        const currentLocalePrefix = state.locale === "es" ? "es" : "en";
+        const filtered = voices.filter(v => v.lang.startsWith(currentLocalePrefix));
+        
+        // Identificar voces femeninas por nombres populares
+        const femaleKeywords = [
+            "samantha", "zira", "hazel", "sabina", "helena", "helen", "hilda", "daria", 
+            "francisca", "paolina", "laura", "alba", "susan", "karen", "moira", "tessa", 
+            "fiona", "veena", "elena", "female", "mujer", "rosa", "maria", "soledad"
+        ];
+        
+        // Clasificar y ordenar: primero voces femeninas, luego el resto
+        const listWithGender = filtered.map(voice => {
+            const isFemale = femaleKeywords.some(kw => voice.name.toLowerCase().includes(kw));
+            return { voice, isFemale };
+        });
+        
+        // Ordenar poniendo las femeninas arriba
+        listWithGender.sort((a, b) => b.isFemale - a.isFemale);
+        
+        if (listWithGender.length === 0) {
+            const opt = document.createElement("option");
+            opt.value = "";
+            opt.innerText = state.locale === "es" ? "Voz por defecto del sistema" : "System default voice";
+            voiceSelect.appendChild(opt);
+            return;
+        }
+
+        listWithGender.forEach(item => {
+            const opt = document.createElement("option");
+            opt.value = item.voice.name;
+            
+            const badge = item.isFemale ? 
+                (state.locale === "es" ? "👩 Voz Femenina" : "👩 Female Voice") : 
+                (state.locale === "es" ? "👤 Voz" : "👤 Voice");
+                
+            opt.innerText = `${item.voice.name} (${item.voice.lang}) - ${badge}`;
+            
+            if (state.voiceName === item.voice.name) {
+                opt.selected = true;
+            }
+            voiceSelect.appendChild(opt);
+        });
+
+        // Si no hay ninguna voz seleccionada previamente en state, elegir la primera (que será femenina si existe)
+        if (!state.voiceName && voiceSelect.options.length > 0) {
+            state.voiceName = voiceSelect.options[0].value;
+            saveLocalState();
+        }
+    };
+
+    // Chrome carga las voces asíncronamente
+    if (window.speechSynthesis.onvoiceschanged !== undefined) {
+        window.speechSynthesis.onvoiceschanged = populateVoicesList;
+    }
+    populateVoicesList();
+
+    // Actualizar voz seleccionada
+    voiceSelect.addEventListener("change", (e) => {
+        state.voiceName = e.target.value;
+        saveLocalState();
+    });
+
+    // Controlar Slider de velocidad
+    speedSlider.value = state.voiceSpeed;
+    speedVal.innerText = `${state.voiceSpeed.toFixed(2)}x`;
+    
+    speedSlider.addEventListener("input", (e) => {
+        const val = parseFloat(e.target.value);
+        state.voiceSpeed = val;
+        speedVal.innerText = `${val.toFixed(2)}x`;
+        saveLocalState();
+    });
+
+    // Probar voz
+    testBtn.addEventListener("click", () => {
+        const testText = state.locale === "es" ? 
+            "Hola, soy tu amigo el Árbol Sabio. Esta es mi voz de aprendizaje." : 
+            "Hello, I am your friend the Wise Tree. This is my learning voice.";
+        speakText(testText);
+    });
+}
+
+function showGameFeedbackMsg(msg, type) {
+    const feedbackIds = ["count-feedback", "sound-feedback", "arena-game-feedback", "sort-progress-msg"];
+    feedbackIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.innerText = msg;
+            if (type === "warning") {
+                el.style.color = "var(--color-orange)";
+            } else if (type === "error") {
+                el.style.color = "var(--color-heart)";
+            } else {
+                el.style.color = "var(--color-green)";
+            }
+        }
+    });
+}
+
+function handleWrongAttempt(gameType, data, onShuffle) {
+    if (typeof state.wrongAttempts !== "number") {
+        state.wrongAttempts = 0;
+    }
+    state.wrongAttempts++;
+    
+    if (state.wrongAttempts === 1) {
+        // Primer fallo: aviso de "Ten cuidado"
+        const msg = state.locale === "es" ? "Ten cuidado. Inténtalo otra vez." : "Be careful. Try again.";
+        speakText(msg);
+        showGameFeedbackMsg(msg, "warning");
+        playAudio("GEN_INTENTALO_OTRA_VEZ");
+    } else if (state.wrongAttempts === 2) {
+        // Segundo fallo: reordenar y avisar que cambiaron
+        const msg = state.locale === "es" ? "Ten cuidado, las opciones han cambiado." : "Be careful, options have changed.";
+        speakText(msg);
+        showGameFeedbackMsg(msg, "warning");
+        playAudio("GEN_INTENTALO_OTRA_VEZ");
+        if (typeof onShuffle === "function") {
+            onShuffle();
+        }
+    } else if (state.wrongAttempts >= 3) {
+        // Tercer fallo: retroceder a la actividad anterior
+        state.wrongAttempts = 0;
+        
+        const prevIdx = Math.max(0, state.currentActivityIndex - 1);
+        const msg = state.locale === "es" ? 
+            "Vamos a repasar la actividad anterior para hacerlo mejor." : 
+            "Let's review the previous activity to do it better.";
+            
+        speakText(msg);
+        showGameFeedbackMsg(msg, "error");
+        
+        // Desactivar temporalmente los botones para evitar clicks durante la transición
+        document.querySelectorAll(".number-opt-btn, .sound-opt-btn, .sort-card-btn").forEach(btn => {
+            btn.disabled = true;
+        });
+        
+        setTimeout(() => {
+            state.currentActivityIndex = prevIdx;
+            state.worldProgress[state.currentWorld] = state.currentActivityIndex;
+            state.currentTreePage = Math.floor(state.currentActivityIndex / 10);
+            
+            const loggedEmail = localStorage.getItem("yarumito_logged_email");
+            if (loggedEmail) {
+                const users = JSON.parse(localStorage.getItem("yarumito_users") || "{}");
+                if (users[loggedEmail]) {
+                    if (!users[loggedEmail].worldProgress) {
+                        users[loggedEmail].worldProgress = {};
+                    }
+                    users[loggedEmail].worldProgress[state.currentWorld] = state.currentActivityIndex;
+                    users[loggedEmail].currentActivityIndex = state.currentActivityIndex;
+                    localStorage.setItem("yarumito_users", JSON.stringify(users));
+                }
+            }
+            
+            saveLocalState();
+            renderProgressTree();
+            renderActiveActivity();
+        }, 3000);
+    }
+}
+
+// --- MÓDULO DEL BLOG ---
+function renderBlogList() {
+    const listContainer = document.getElementById("blog-list-view");
+    const detailContainer = document.getElementById("blog-detail-view");
+    const grid = document.getElementById("blog-posts-grid");
+    
+    if (!grid || !listContainer || !detailContainer) return;
+    
+    listContainer.style.display = "block";
+    detailContainer.style.display = "none";
+    grid.innerHTML = "";
+    
+    const posts = blogPosts[state.locale];
+    posts.forEach(post => {
+        const card = document.createElement("div");
+        card.classList.add("blog-card");
+        card.innerHTML = `
+            <span class="blog-card-tag">${post.tag}</span>
+            <h3 class="blog-card-title">${post.title}</h3>
+            <span style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px; font-weight:500;">📅 ${post.date}</span>
+            <p class="blog-card-desc">${post.desc}</p>
+            <button class="blog-card-btn" data-id="${post.id}">${state.locale === "es" ? "Leer Artículo ➔" : "Read Article ➔"}</button>
+        `;
+        
+        card.querySelector(".blog-card-btn").addEventListener("click", (e) => {
+            const postId = e.currentTarget.getAttribute("data-id");
+            showBlogPost(postId);
+        });
+        
+        grid.appendChild(card);
+    });
+}
+
+function showBlogPost(postId) {
+    const listContainer = document.getElementById("blog-list-view");
+    const detailContainer = document.getElementById("blog-detail-view");
+    const content = document.getElementById("blog-article-content");
+    
+    if (!listContainer || !detailContainer || !content) return;
+    
+    const posts = blogPosts[state.locale];
+    const post = posts.find(p => p.id === postId);
+    if (!post) return;
+    
+    listContainer.style.display = "none";
+    detailContainer.style.display = "block";
+    
+    content.innerHTML = `
+        <span class="blog-card-tag">${post.tag}</span>
+        <h2 style="font-size: 2.2rem; font-weight: 900; color:var(--text-main); line-height:1.2; margin-top:10px;">${post.title}</h2>
+        <div class="blog-article-meta">
+            <span>📅 ${post.date}</span>
+            <span>👤 Yarumito Team</span>
+        </div>
+        <div class="blog-article-body">
+            ${post.content}
+        </div>
+    `;
+    
+    // Configurar el formulario de comentarios
+    loadBlogComments(postId);
+    
+    const form = document.getElementById("blog-comment-submit-form");
+    form.onsubmit = (e) => {
+        e.preventDefault();
+        const author = document.getElementById("comment-author-name").value.trim();
+        const email = document.getElementById("comment-author-email").value.trim();
+        const text = document.getElementById("comment-text-content").value.trim();
+        
+        if (author && text) {
+            saveBlogComment(postId, author, email, text);
+            form.reset();
+        }
+    };
+    
+    document.getElementById("btn-back-to-blog").onclick = () => {
+        renderBlogList();
+    };
+}
+
+function loadBlogComments(postId) {
+    const list = document.getElementById("blog-comments-list");
+    if (!list) return;
+    list.innerHTML = "";
+    
+    // Cargar comentarios locales
+    const localComments = JSON.parse(localStorage.getItem("yarumito_blog_comments") || "{}");
+    const postComments = localComments[postId] || [];
+    
+    // Si no hay comentarios locales, cargar los por defecto del post
+    const posts = blogPosts[state.locale];
+    const post = posts.find(p => p.id === postId);
+    const defaults = post ? post.defaultComments : [];
+    
+    const allComments = [...defaults, ...postComments];
+    
+    if (allComments.length === 0) {
+        list.innerHTML = `<p style="font-style:italic; color:var(--text-muted); font-size:0.9rem;">${state.locale === "es" ? "Sé el primero en comentar..." : "Be the first to comment..."}</p>`;
+        return;
+    }
+    
+    allComments.forEach(comment => {
+        const item = document.createElement("div");
+        item.classList.add("blog-comment-item");
+        item.innerHTML = `
+            <div class="blog-comment-header">
+                <span class="blog-comment-author">👤 ${comment.author}</span>
+                <span>${comment.date}</span>
+            </div>
+            <p class="blog-comment-text">${comment.text}</p>
+        `;
+        list.appendChild(item);
+    });
+    list.scrollTop = list.scrollHeight;
+}
+
+function saveBlogComment(postId, author, email, text) {
+    const localComments = JSON.parse(localStorage.getItem("yarumito_blog_comments") || "{}");
+    if (!localComments[postId]) {
+        localComments[postId] = [];
+    }
+    
+    const now = new Date();
+    const formattedDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+    
+    localComments[postId].push({ author, text, date: formattedDate });
+    localStorage.setItem("yarumito_blog_comments", JSON.stringify(localComments));
+    
+    // Recargar la lista
+    loadBlogComments(postId);
+}
+
+// --- REPORTE DE ERRORES/SUGERENCIAS DE ACTIVIDAD ---
+function setupActivityFeedback() {
+    const toggleBtn = document.getElementById("btn-toggle-feedback");
+    const reportBox = document.getElementById("feedback-report-box");
+    const form = document.getElementById("activity-feedback-form");
+    const successMsg = document.getElementById("feedback-report-success");
+    
+    if (!toggleBtn || !reportBox || !form) return;
+    
+    // Toggle abrir/cerrar caja de reporte
+    toggleBtn.addEventListener("click", () => {
+        const isHidden = reportBox.style.display === "none";
+        reportBox.style.display = isHidden ? "block" : "none";
+        successMsg.style.display = "none";
+        form.reset();
+    });
+    
+    // Submit del reporte
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        
+        const type = document.getElementById("feedback-type").value;
+        const desc = document.getElementById("feedback-desc").value.trim();
+        
+        const activities = getActiveActivities();
+        const activeAct = activities[state.currentActivityIndex] || { id: "unknown", title: "Actividad General" };
+        
+        const report = {
+            id: `report_${Date.now()}`,
+            childName: state.childName,
+            activityIndex: state.currentActivityIndex,
+            activityId: activeAct.id || "W1_ACT",
+            activityTitle: activeAct.title,
+            type,
+            desc,
+            date: new Date().toISOString()
+        };
+        
+        // Guardar en LocalStorage
+        const allReports = JSON.parse(localStorage.getItem("yarumito_activity_reports") || "[]");
+        allReports.push(report);
+        localStorage.setItem("yarumito_activity_reports", JSON.stringify(allReports));
+        
+        // Mock enviar reporte a la API Central (en segundo plano)
+        fetch(`${API_BASE_URL}/api/report-malfunction`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(report)
+        }).catch(err => console.warn("API Central fuera de línea. Reporte guardado localmente.", err));
+        
+        // Mostrar mensaje de éxito y resetear formulario
+        form.reset();
+        successMsg.style.display = "block";
+        
+        setTimeout(() => {
+            reportBox.style.display = "none";
+            successMsg.style.display = "none";
+        }, 3000);
+    });
+}
+
+// ==========================================
 // 10. Persistencia Local
 // ==========================================
 function saveLocalState() {
@@ -1227,7 +2180,11 @@ function saveLocalState() {
         childAvatar: state.childAvatar,
         currentActivityIndex: state.currentActivityIndex,
         firstActivityCompleted: state.firstActivityCompleted,
-        pcMode: state.pcMode
+        pcMode: state.pcMode,
+        voiceName: state.voiceName,
+        voiceSpeed: state.voiceSpeed,
+        currentWorld: state.currentWorld,
+        worldProgress: state.worldProgress
     }));
 }
 
@@ -1239,9 +2196,16 @@ function loadLocalState() {
         state.isRegistered = local.isRegistered || false;
         state.childName = local.childName || "James";
         state.childAvatar = local.childAvatar || "🦊";
-        state.currentActivityIndex = typeof local.currentActivityIndex === "number" ? local.currentActivityIndex : 0;
         state.firstActivityCompleted = local.firstActivityCompleted || false;
         state.pcMode = local.pcMode || false;
+        state.voiceName = local.voiceName || "";
+        state.voiceSpeed = typeof local.voiceSpeed === "number" ? local.voiceSpeed : 0.85;
+        state.currentWorld = local.currentWorld || 1;
+        state.worldProgress = local.worldProgress || {
+            1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0,
+            11: 0, 12: 0, 13: 0, 14: 0, 15: 0, 16: 0, 17: 0, 18: 0, 19: 0, 20: 0
+        };
+        state.currentActivityIndex = typeof state.worldProgress[state.currentWorld] === "number" ? state.worldProgress[state.currentWorld] : 0;
         state.currentTreePage = Math.floor(state.currentActivityIndex / 10);
         
         const pcCheck = document.getElementById("pc-mode-check");
@@ -1413,7 +2377,16 @@ function renderActiveActivity() {
     const arena = document.getElementById("active-activity-box");
     if (!arena) return;
     
-    // Si completó todas las actividades del Mundo 1
+    // Actualizar el título del mundo activo en la interfaz
+    const titleLabel = document.getElementById("game-zone-title-label");
+    if (titleLabel) {
+        const worldData = worldsData[state.locale].find(w => w.num === state.currentWorld);
+        titleLabel.innerText = state.locale === "es" ? 
+            `🎮 Arena de Juego Activo - ${worldData ? worldData.title : `Mundo ${state.currentWorld}`}` :
+            `🎮 Active Game Arena - ${worldData ? worldData.title : `World ${state.currentWorld}`}`;
+    }
+    
+    // Si completó todas las actividades del mundo actual
     const activities = getActiveActivities();
     const totalActs = activities.length;
     if (state.currentActivityIndex >= totalActs) {
@@ -1441,8 +2414,8 @@ function renderActiveActivity() {
     
     const speakInstruction = () => {
         const text = state.locale === "es" ? 
-            `Actividad ${state.currentActivityIndex + 1}. ${act.title}. ${act.desc}` : 
-            `Activity ${state.currentActivityIndex + 1}. ${act.title}. ${act.desc}`;
+            `Mundo ${state.currentWorld}. Actividad ${state.currentActivityIndex + 1}. ${act.title}. ${act.desc}` : 
+            `World ${state.currentWorld}. Activity ${state.currentActivityIndex + 1}. ${act.title}. ${act.desc}`;
         speakText(text);
     };
     
@@ -1511,6 +2484,7 @@ function completeCurrentActivity() {
     
     setTimeout(() => {
         state.currentActivityIndex++;
+        state.worldProgress[state.currentWorld] = state.currentActivityIndex;
         state.currentTreePage = Math.floor(state.currentActivityIndex / 10);
         
         // Guardar progreso en el mapa de usuarios local de localStorage
@@ -1518,6 +2492,10 @@ function completeCurrentActivity() {
         if (loggedEmail) {
             const users = JSON.parse(localStorage.getItem("yarumito_users") || "{}");
             if (users[loggedEmail]) {
+                if (!users[loggedEmail].worldProgress) {
+                    users[loggedEmail].worldProgress = {};
+                }
+                users[loggedEmail].worldProgress[state.currentWorld] = state.currentActivityIndex;
                 users[loggedEmail].currentActivityIndex = state.currentActivityIndex;
                 localStorage.setItem("yarumito_users", JSON.stringify(users));
             }
@@ -1533,6 +2511,9 @@ function completeCurrentActivity() {
 function setupMiniGame(index) {
     const container = document.getElementById("arena-game-body-container");
     if (!container) return;
+    
+    // Reiniciar contador de intentos incorrectos para la nueva actividad
+    state.wrongAttempts = 0;
     
     const activities = getActiveActivities();
     if (index < 0 || index >= activities.length) return;
@@ -1550,7 +2531,7 @@ function setupMiniGame(index) {
             setupGameTrace(container, act.data.number);
             break;
         case "repeat":
-            setupGameRepeat(container);
+            setupGameRepeat(container, act.data ? act.data.number : null);
             break;
         case "sort":
             setupGameSort(container, act.data.start, act.data.end);
@@ -1574,29 +2555,48 @@ function setupMiniGame(index) {
 }
 
 // 1. Contar Elementos Visuales (Manzanas, estrellas, etc.)
-function setupGameCountVisual(container, data) {
-    const voiceMsg = state.locale === "es" ? 
-        `Cuenta cuántos elementos ves en la pantalla.` :
-        `Count how many items you see on the screen.`;
-    setTimeout(() => speakText(voiceMsg), 1000);
+function setupGameCountVisual(container, data, skipVoice = false) {
+    const isVowelChoice = data.isVowelChoice === true;
     
-    const count = data.count;
-    const opts = [count, count + 1, count - 1].filter(n => n > 0);
-    const uniqueOpts = [...new Set(opts)];
-    uniqueOpts.sort(() => Math.random() - 0.5);
+    if (!skipVoice) {
+        const voiceMsg = state.locale === "es" ? 
+            (isVowelChoice ? `Observa el dibujo y selecciona con qué vocal comienza.` : `Cuenta cuántos elementos ves en la pantalla.`) :
+            (isVowelChoice ? `Look at the picture and select the starting vowel.` : `Count how many items you see on the screen.`);
+        setTimeout(() => speakText(voiceMsg), 1000);
+    }
+    
+    const correctVal = isVowelChoice ? data.correctVowel : data.count;
+    
+    let uniqueOpts;
+    if (isVowelChoice) {
+        const vowels = ["A", "E", "I", "O", "U"];
+        const others = vowels.filter(v => v !== correctVal);
+        others.sort(() => Math.random() - 0.5);
+        uniqueOpts = [correctVal, others[0], others[1]];
+        uniqueOpts.sort(() => Math.random() - 0.5);
+    } else {
+        const count = data.count;
+        const opts = [count, count + 1, count - 1].filter(n => n > 0);
+        uniqueOpts = [...new Set(opts)];
+        uniqueOpts.sort(() => Math.random() - 0.5);
+    }
     
     let emojisHtml = "";
-    for (let i = 0; i < count; i++) {
-        emojisHtml += `<span style="font-size:3.5rem; margin:5px; display:inline-block; animation: float ${1.5 + (i * 0.2)}s infinite ease-in-out alternate;">${data.emoji}</span>`;
+    if (!isVowelChoice) {
+        for (let i = 0; i < data.count; i++) {
+            emojisHtml += `<span style="font-size:3.5rem; margin:5px; display:inline-block; animation: float ${1.5 + (i * 0.2)}s infinite ease-in-out alternate;">${data.emoji}</span>`;
+        }
     }
     
     container.innerHTML = `
         <div style="text-align:center; margin:15px 0; width:100%;">
             <div style="min-height:90px; display:flex; flex-wrap:wrap; justify-content:center; align-items:center; margin-bottom:20px; background:rgba(0,0,0,0.02); padding:15px; border-radius:15px;">
-                ${emojisHtml}
+                ${isVowelChoice ? `<span style="font-size:5rem; display:inline-block; animation: float 2.5s infinite ease-in-out alternate;">${data.emoji}</span>` : emojisHtml}
             </div>
             <h4 style="margin-bottom:15px; font-family:'Outfit',sans-serif; color:var(--text-main); font-weight:700;">
-                ${state.locale === "es" ? `¿Cuántas ${data.name} hay?` : `How many ${data.name} are there?`}
+                ${state.locale === "es" ? 
+                    (isVowelChoice ? `¿Con qué vocal empieza ${data.name}?` : `¿Cuántas ${data.name} hay?`) : 
+                    (isVowelChoice ? `What vowel does ${data.name} start with?` : `How many ${data.name} are there?`)}
             </h4>
             <div style="display:flex; justify-content:center; gap:15px;">
                 ${uniqueOpts.map(opt => `
@@ -1611,20 +2611,19 @@ function setupGameCountVisual(container, data) {
     
     container.querySelectorAll(".count-opt-btn").forEach(btn => {
         btn.addEventListener("click", (e) => {
-            const num = parseInt(e.currentTarget.getAttribute("data-num"));
-            const feedbackMsg = document.getElementById("count-feedback");
+            const rawVal = e.currentTarget.getAttribute("data-num");
+            const num = isVowelChoice ? rawVal : parseInt(rawVal);
             
-            if (num === count) {
+            if (num === correctVal) {
                 e.currentTarget.style.background = "var(--color-pastel-green)";
                 e.currentTarget.style.color = "var(--color-green)";
                 e.currentTarget.style.borderColor = "var(--color-green)";
                 completeCurrentActivity();
             } else {
-                playAudio("GEN_INTENTALO_OTRA_VEZ");
-                feedbackMsg.style.color = "var(--color-heart)";
-                feedbackMsg.innerText = state.locale === "es" ? "❌ ¡Casi! Cuenta otra vez." : "❌ Try again! Count one more time.";
-                
-                logTelemetryError(`W1_COUNT_VISUAL_${data.emoji}`, count.toString(), num.toString(), "Error en conteo visual de elementos.");
+                handleWrongAttempt("count_visual", data, () => {
+                    setupGameCountVisual(container, data, true);
+                });
+                logTelemetryError(`W1_COUNT_VISUAL_${data.emoji}`, correctVal.toString(), num.toString(), "Error en conteo visual u opción de vocal.");
             }
         });
     });
@@ -1664,15 +2663,89 @@ function setupGameTrace(container, number) {
             { id: 3, x: 40, y: 50 },
             { id: 4, x: 60, y: 60 },
             { id: 5, x: 35, y: 75 }
+        ],
+        "A": [
+            { id: 1, x: 25, y: 75 },
+            { id: 2, x: 50, y: 25 },
+            { id: 3, x: 75, y: 75 },
+            { id: 4, x: 35, y: 55 },
+            { id: 5, x: 65, y: 55 }
+        ],
+        "E": [
+            { id: 1, x: 65, y: 25 },
+            { id: 2, x: 35, y: 25 },
+            { id: 3, x: 35, y: 50 },
+            { id: 4, x: 55, y: 50 },
+            { id: 5, x: 35, y: 75 },
+            { id: 6, x: 65, y: 75 }
+        ],
+        "I": [
+            { id: 1, x: 35, y: 25 },
+            { id: 2, x: 65, y: 25 },
+            { id: 3, x: 50, y: 25 },
+            { id: 4, x: 50, y: 75 },
+            { id: 5, x: 35, y: 75 },
+            { id: 6, x: 65, y: 75 }
+        ],
+        "O": [
+            { id: 1, x: 50, y: 25 },
+            { id: 2, x: 75, y: 50 },
+            { id: 3, x: 50, y: 75 },
+            { id: 4, x: 25, y: 50 },
+            { id: 5, x: 48, y: 26 }
+        ],
+        "U": [
+            { id: 1, x: 30, y: 25 },
+            { id: 2, x: 30, y: 70 },
+            { id: 3, x: 50, y: 78 },
+            { id: 4, x: 70, y: 70 },
+            { id: 5, x: 70, y: 25 }
+        ],
+        "a": [
+            { id: 1, x: 60, y: 40 },
+            { id: 2, x: 40, y: 40 },
+            { id: 3, x: 40, y: 70 },
+            { id: 4, x: 60, y: 70 },
+            { id: 5, x: 60, y: 40 },
+            { id: 6, x: 60, y: 75 }
+        ],
+        "e": [
+            { id: 1, x: 35, y: 55 },
+            { id: 2, x: 65, y: 55 },
+            { id: 3, x: 50, y: 35 },
+            { id: 4, x: 35, y: 55 },
+            { id: 5, x: 50, y: 75 },
+            { id: 6, x: 65, y: 65 }
+        ],
+        "i": [
+            { id: 1, x: 50, y: 30 },
+            { id: 2, x: 50, y: 45 },
+            { id: 3, x: 50, y: 75 }
+        ],
+        "o": [
+            { id: 1, x: 50, y: 40 },
+            { id: 2, x: 65, y: 55 },
+            { id: 3, x: 50, y: 70 },
+            { id: 4, x: 35, y: 55 },
+            { id: 5, x: 48, y: 41 }
+        ],
+        "u": [
+            { id: 1, x: 35, y: 40 },
+            { id: 2, x: 35, y: 65 },
+            { id: 3, x: 50, y: 73 },
+            { id: 4, x: 65, y: 65 },
+            { id: 5, x: 65, y: 40 },
+            { id: 6, x: 65, y: 75 }
         ]
     };
     
     const points = tracePoints[number] || tracePoints[1];
     let nextPointIndex = 0;
+    const isVowel = typeof number === "string";
     
     const voiceMsg = state.locale === "es" ? 
-        `Une los puntos en orden para formar el número ${number}.` : 
-        `Connect the dots in order to draw number ${number}.`;
+        (isVowel ? `Une los puntos en orden para formar la letra ${number}.` : `Une los puntos en orden para formar el número ${number}.`) : 
+        (isVowel ? `Connect the dots in order to draw letter ${number}.` : `Connect the dots in order to draw number ${number}.`);
     setTimeout(() => speakText(voiceMsg), 1000);
     
     container.innerHTML = `
@@ -1731,21 +2804,18 @@ function setupGameTrace(container, number) {
                 setTimeout(() => osc.stop(), 120);
                 
                 if (nextPointIndex === points.length) {
-                    speakText(state.locale === "es" ? `¡Excelente! Número ${number} trazado.` : `Awesome! Number ${number} traced.`);
+                    const traceMsg = state.locale === "es" ? 
+                        (isVowel ? `¡Excelente! Letra ${number} trazada.` : `¡Excelente! Número ${number} trazado.`) : 
+                        (isVowel ? `Awesome! Letter ${number} traced.` : `Awesome! Number ${number} traced.`);
+                    speakText(traceMsg);
                     completeCurrentActivity();
                 } else {
                     const nextDot = document.getElementById(`dot-${p.id + 1}`);
                     if (nextDot) nextDot.classList.add("active-pulse");
                 }
             } else {
-                playAudio("GEN_INTENTALO_OTRA_VEZ");
-                const feedback = document.getElementById("trace-feedback");
-                feedback.style.color = "var(--color-heart)";
-                feedback.innerText = state.locale === "es" ? 
-                    `Busca el punto número ${nextPointIndex + 1}` : 
-                    `Find the dot number ${nextPointIndex + 1}`;
-                
-                logTelemetryError(`W1_TRACE_${number}`, (nextPointIndex + 1).toString(), p.id.toString(), "Error secuencial al unir puntos para trazar número.");
+                handleWrongAttempt("trace", number, null);
+                logTelemetryError(`W1_TRACE_${number}`, (nextPointIndex + 1).toString(), p.id.toString(), "Error secuencial al unir puntos para trazar.");
             }
         });
     });
@@ -1774,12 +2844,15 @@ function setupGameParent(container, act) {
 }
 
 // 4. Contar Sonidos (Web Audio)
-function setupGameCountSounds(container, data) {
+function setupGameCountSounds(container, data, skipVoice = false) {
     const count = data.count;
-    const voiceMsg = state.locale === "es" ? 
-        `Escucha con atención. Toca el megáfono y cuenta cuántos sonidos escuchas.` :
-        `Listen carefully. Tap the megaphone and count how many sounds you hear.`;
-    setTimeout(() => speakText(voiceMsg), 1000);
+    const isVowelSpeech = data.isVowelSpeech === true;
+    if (!skipVoice) {
+        const voiceMsg = state.locale === "es" ? 
+            (isVowelSpeech ? `Escucha con atención. Toca el megáfono y cuenta cuántas veces escuchas la letra ${data.vowel}.` : `Escucha con atención. Toca el megáfono y cuenta cuántos sonidos escuchas.`) :
+            (isVowelSpeech ? `Listen carefully. Tap the megaphone and count how many times you hear letter ${data.vowel}.` : `Listen carefully. Tap the megaphone and count how many sounds you hear.`);
+        setTimeout(() => speakText(voiceMsg), 1000);
+    }
     
     const opts = [count, count + 1, count - 1].filter(n => n > 0);
     const uniqueOpts = [...new Set(opts)];
@@ -1794,7 +2867,9 @@ function setupGameCountSounds(container, data) {
                 ${state.locale === "es" ? "Presiona para escuchar" : "Press to listen"}
             </p>
             <h4 style="margin-bottom:15px; font-family:'Outfit',sans-serif; color:var(--text-main); font-weight:700;">
-                ${state.locale === "es" ? `¿Cuántos ${data.name} escuchaste?` : `How many ${data.name} did you hear?`}
+                ${state.locale === "es" ? 
+                    (isVowelSpeech ? `¿Cuántas veces escuchaste la ${data.name}?` : `¿Cuántos ${data.name} escuchaste?`) : 
+                    (isVowelSpeech ? `How many times did you hear ${data.name}?` : `How many ${data.name} did you hear?`)}
             </h4>
             <div style="display:flex; justify-content:center; gap:15px;">
                 ${uniqueOpts.map(opt => `
@@ -1820,14 +2895,14 @@ function setupGameCountSounds(container, data) {
             osc.frequency.setValueAtTime(150, now);
             osc.frequency.exponentialRampToValueAtTime(380, now + 0.08);
             osc.frequency.exponentialRampToValueAtTime(100, now + 0.22);
-            gain.gain.setValueAtTime(0.12, now);
+            gain.gain.setValueAtTime(0.38, now); // Volumen incrementado (era 0.12)
             gain.gain.linearRampToValueAtTime(0.001, now + 0.25);
             osc.start(now);
             osc.stop(now + 0.25);
         } else if (type === "knock") {
             osc.type = "sine";
             osc.frequency.setValueAtTime(90, now);
-            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.setValueAtTime(0.55, now); // Volumen incrementado (era 0.2)
             gain.gain.linearRampToValueAtTime(0.001, now + 0.12);
             osc.start(now);
             osc.stop(now + 0.12);
@@ -1836,7 +2911,7 @@ function setupGameCountSounds(container, data) {
             osc.frequency.setValueAtTime(400, now);
             osc.frequency.linearRampToValueAtTime(650, now + 0.2);
             osc.frequency.linearRampToValueAtTime(450, now + 0.45);
-            gain.gain.setValueAtTime(0.06, now);
+            gain.gain.setValueAtTime(0.28, now); // Volumen incrementado (era 0.06)
             gain.gain.linearRampToValueAtTime(0.001, now + 0.45);
             osc.start(now);
             osc.stop(now + 0.45);
@@ -1844,14 +2919,14 @@ function setupGameCountSounds(container, data) {
             osc.type = "sine";
             osc.frequency.setValueAtTime(1200, now);
             osc.frequency.exponentialRampToValueAtTime(3000, now + 0.08);
-            gain.gain.setValueAtTime(0.08, now);
+            gain.gain.setValueAtTime(0.25, now); // Volumen incrementado (era 0.08)
             gain.gain.linearRampToValueAtTime(0.001, now + 0.12);
             osc.start(now);
             osc.stop(now + 0.12);
         } else {
             osc.type = "sine";
             osc.frequency.setValueAtTime(880, now);
-            gain.gain.setValueAtTime(0.06, now);
+            gain.gain.setValueAtTime(0.25, now); // Volumen incrementado (era 0.06)
             gain.gain.exponentialRampToValueAtTime(0.001, now + 0.65);
             osc.start(now);
             osc.stop(now + 0.65);
@@ -1875,9 +2950,13 @@ function setupGameCountSounds(container, data) {
         
         const nextSound = () => {
             if (soundCount < count) {
-                playSingleSound(data.sound, audioCtx);
+                if (isVowelSpeech) {
+                    speakText(data.vowel);
+                } else {
+                    playSingleSound(data.sound, audioCtx);
+                }
                 soundCount++;
-                setTimeout(nextSound, data.sound === "bell" ? 750 : 500);
+                setTimeout(nextSound, isVowelSpeech ? 1300 : (data.sound === "bell" ? 750 : 500));
             } else {
                 isPlaying = false;
                 playBtn.innerText = "📢";
@@ -1893,7 +2972,6 @@ function setupGameCountSounds(container, data) {
     container.querySelectorAll(".sound-opt-btn").forEach(btn => {
         btn.addEventListener("click", (e) => {
             const num = parseInt(e.currentTarget.getAttribute("data-num"));
-            const feedbackMsg = document.getElementById("sound-feedback");
             
             if (num === count) {
                 e.currentTarget.style.background = "var(--color-pastel-green)";
@@ -1901,11 +2979,10 @@ function setupGameCountSounds(container, data) {
                 e.currentTarget.style.borderColor = "var(--color-green)";
                 completeCurrentActivity();
             } else {
-                playAudio("GEN_INTENTALO_OTRA_VEZ");
-                feedbackMsg.style.color = "var(--color-heart)";
-                feedbackMsg.innerText = state.locale === "es" ? "❌ Casi. Vuelve a escuchar y cuenta." : "❌ Try again. Listen and count once more.";
-                
-                logTelemetryError(`W1_SOUND_COUNT_${data.sound}`, count.toString(), num.toString(), "Error en discriminación y conteo auditivo.");
+                handleWrongAttempt("count_sounds", data, () => {
+                    setupGameCountSounds(container, data, true);
+                });
+                logTelemetryError(`W1_SOUND_COUNT_${data.sound || 'vowel'}`, count.toString(), num.toString(), "Error en discriminación y conteo auditivo.");
             }
         });
     });
@@ -1964,14 +3041,21 @@ function setupGameJump(container, count) {
 
 // 6. Escanear Código QR
 function setupGameQR(container, target) {
+    const isVowel = typeof target === "string";
     const voiceMsg = state.locale === "es" ? 
-        `Busca el código QR impreso del número ${target} en la habitación.` :
-        `Search for the printed QR card of number ${target} in the room.`;
+        (isVowel ? `Busca el código QR impreso de la letra ${target} en la habitación.` : `Busca el código QR impreso del número ${target} en la habitación.`) :
+        (isVowel ? `Search for the printed QR card of letter ${target} in the room.` : `Search for the printed QR card of number ${target} in the room.`);
     setTimeout(() => speakText(voiceMsg), 1000);
     
+    const options = isVowel ? 
+        [target === "E" ? "A" : "E", target, "U"] : 
+        [target === 3 ? 2 : 3, target, 5];
+        
     container.innerHTML = `
         <h4 style="margin-bottom:15px; text-align:center; font-family:'Outfit',sans-serif; color:var(--text-main); font-weight:700;">
-            ${state.locale === "es" ? `Busca el QR del número ${target}:` : `Find the QR for number ${target}:`}
+            ${state.locale === "es" ? 
+                (isVowel ? `Busca el QR de la letra ${target}:` : `Busca el QR del número ${target}:`) : 
+                (isVowel ? `Find the QR for letter ${target}:` : `Find the QR for number ${target}:`)}
         </h4>
         <div class="simulated-camera" style="width:100%; max-width:340px; height:240px; border-radius:15px; overflow:hidden; border:3px solid var(--color-pastel-blue); background:rgba(0,0,0,0.03); margin:0 auto 15px; position:relative;">
             <div class="camera-lens" style="padding:15px; height:100%; display:flex; flex-direction:column; justify-content:space-between; align-items:center;">
@@ -1980,13 +3064,13 @@ function setupGameQR(container, target) {
                     📷 ${state.locale === "es" ? "Escaneando..." : "Scanning..."}
                 </span>
                 <div class="card-options" style="display:flex; gap:10px; margin-top:10px;">
-                    <button class="scan-option-btn arena-qr-btn" data-payload="yarumito://activity/number/${target === 3 ? 2 : 3}">📄 [${target === 3 ? 2 : 3}]</button>
-                    <button class="scan-option-btn arena-qr-btn" data-payload="yarumito://activity/number/${target}">📄 [${target}]</button>
-                    <button class="scan-option-btn arena-qr-btn" data-payload="yarumito://activity/number/5">📄 [5]</button>
+                    ${options.map(opt => `
+                        <button class="scan-option-btn arena-qr-btn" data-payload="yarumito://activity/${isVowel ? 'vowel' : 'number'}/${opt}">📄 [${opt}]</button>
+                    `).join("")}
                 </div>
             </div>
         </div>
-        <div id="qr-feedback" style="text-align:center; font-weight:600; min-height:24px;"></div>
+        <div id="qr-feedback" style="text-align:center; font-weight:600; min-height:24px; color:var(--text-muted);"></div>
     `;
     
     const styleId = "scan-anim-styles";
@@ -2016,8 +3100,8 @@ function setupGameQR(container, target) {
                 const response = await fetch(url);
                 result = await response.json();
             } catch (err) {
-                const number = parseInt(payload.split("/").pop());
-                result = { success: number === target, scanned_number: number };
+                const scannedValue = payload.split("/").pop();
+                result = { success: scannedValue.toUpperCase() === target.toString().toUpperCase(), scanned_number: scannedValue };
             }
             
             if (result.success) {
@@ -2025,190 +3109,34 @@ function setupGameQR(container, target) {
                 feedback.innerHTML = state.locale === "es" ? "¡Excelente! Código QR correcto." : "Awesome! Correct QR code.";
                 completeCurrentActivity();
             } else {
-                playAudio("GEN_INTENTALO_OTRA_VEZ");
-                feedback.style.color = "var(--color-heart)";
-                feedback.innerHTML = state.locale === "es" ? 
-                    `❌ Escaneaste el número ${result.scanned_number || 2}, pero buscamos el ${target}.` : 
-                    `❌ Scanned number ${result.scanned_number || 2}, but we need ${target}.`;
-                
-                logTelemetryError(`W1_QR_SCAN_${target}`, target.toString(), (result.scanned_number || 2).toString(), "Código QR incorrecto escaneado.");
+                handleWrongAttempt("qr", target, null);
+                logTelemetryError(`W1_QR_SCAN_${target}`, target.toString(), (result.scanned_number || "").toString(), "Código QR incorrecto escaneado.");
             }
         });
     });
 }
 
-// 7. Actividad: Repite Conmigo
-function setupGameRepeat(container) {
-    const targetNumber = Math.floor(Math.random() * 10) + 1;
-    const voiceMsg = state.locale === "es" ? 
-        `Repite conmigo: el número ${targetNumber}. Presiona el micrófono y dilo fuerte.` :
-        `Repeat after me: number ${targetNumber}. Press the microphone and say it out loud.`;
-        
-    setTimeout(() => speakText(voiceMsg), 1000);
-    
-    container.innerHTML = `
-        <div style="text-align: center; margin: 20px 0; display:flex; flex-direction:column; align-items:center; width:100%;">
-            <div style="font-size: 1.5rem; font-weight: 700; color: var(--color-green); margin-bottom: 15px;">
-                ${state.locale === "es" ? `Repite: ¡${targetNumber}!` : `Repeat: ${targetNumber}!`}
-            </div>
-            <button class="number-opt-btn active-pulse" id="mic-btn" style="width: 100px; height: 100px; font-size: 3rem; border-radius: 50%; background: var(--color-pastel-blue); color: var(--color-accent); border: 3px solid var(--color-accent); cursor: pointer; transition: all 0.3s ease; display:flex; align-items:center; justify-content:center;">
-                🎤
-            </button>
-            <div id="mic-status" style="margin-top: 15px; font-weight: 500; color: var(--text-muted);">
-                ${state.locale === "es" ? "Presiona para hablar" : "Press to talk"}
-            </div>
-            <div id="voice-waves" style="display: none; justify-content: center; gap: 6px; margin-top: 15px; height:45px; align-items:center;">
-                <span class="wave-bar" style="width:6px; height:20px; background:var(--color-accent); border-radius:3px; animation: wave-anim 0.6s infinite ease-in-out alternate;"></span>
-                <span class="wave-bar" style="width:6px; height:40px; background:var(--color-accent); border-radius:3px; animation: wave-anim 0.6s infinite ease-in-out alternate; animation-delay: 0.15s;"></span>
-                <span class="wave-bar" style="width:6px; height:30px; background:var(--color-accent); border-radius:3px; animation: wave-anim 0.6s infinite ease-in-out alternate; animation-delay: 0.30s;"></span>
-                <span class="wave-bar" style="width:6px; height:15px; background:var(--color-accent); border-radius:3px; animation: wave-anim 0.6s infinite ease-in-out alternate; animation-delay: 0.45s;"></span>
-            </div>
-        </div>
-    `;
-    
-    const styleId = "wave-anim-styles";
-    if (!document.getElementById(styleId)) {
-        const style = document.createElement("style");
-        style.id = styleId;
-        style.innerHTML = `
-            @keyframes wave-anim {
-                0% { transform: scaleY(0.3); }
-                100% { transform: scaleY(1); }
-            }
-        `;
-        document.head.appendChild(style);
-    }
-    
-    const micBtn = document.getElementById("mic-btn");
-    const status = document.getElementById("mic-status");
-    const waves = document.getElementById("voice-waves");
-    
-    micBtn.addEventListener("click", () => {
-        micBtn.classList.remove("active-pulse");
-        waves.style.display = "flex";
-        status.innerText = state.locale === "es" ? "Te escucho..." : "Listening...";
-        micBtn.style.background = "#fadbd8";
-        micBtn.style.color = "var(--color-heart)";
-        micBtn.style.borderColor = "var(--color-heart)";
-        micBtn.innerText = "🛑";
-        
-        setTimeout(() => {
-            waves.style.display = "none";
-            micBtn.innerText = "🎤";
-            micBtn.style.background = "var(--color-pastel-blue)";
-            micBtn.style.color = "var(--color-accent)";
-            micBtn.style.borderColor = "var(--color-accent)";
-            status.innerText = state.locale === "es" ? "¡Genial! Te escuché." : "Great! I heard you.";
-            
-            speakText(state.locale === "es" ? 
-                `¡Te escuché fuerte y claro! Dijiste el número ${targetNumber}. ¡Excelente trabajo!` : 
-                `I heard you loud and clear! You said number ${targetNumber}. Excellent job!`
-            );
-            
-            completeCurrentActivity();
-        }, 2500);
-    });
-}
 
-// 8. Actividad: Ordenar Números
-function setupGameSort(container, start, end) {
-    const numbers = [];
-    for (let i = start; i <= end; i++) {
-        numbers.push(i);
-    }
-    
-    const shuffled = [...numbers];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    
-    let isSorted = true;
-    for (let i = 0; i < shuffled.length; i++) {
-        if (shuffled[i] !== numbers[i]) {
-            isSorted = false;
-            break;
-        }
-    }
-    if (isSorted && shuffled.length > 1) {
-        [shuffled[0], shuffled[1]] = [shuffled[1], shuffled[0]];
-    }
-    
-    const voiceMsg = state.locale === "es" ? 
-        `Ordena los números de menor a mayor, empezando por el número ${start}.` : 
-        `Sort the numbers from smallest to largest, starting with number ${start}.`;
-        
-    setTimeout(() => speakText(voiceMsg), 1000);
-    
-    container.innerHTML = `
-        <h4 style="margin-bottom:15px; text-align:center; font-family:'Outfit',sans-serif; font-weight:700; color:var(--text-main); width:100%;">
-            ${state.locale === "es" ? `Toca en orden del ${start} al ${end}:` : `Tap in order from ${start} to ${end}:`}
-        </h4>
-        <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:400px; margin: 0 auto 20px;">
-            ${shuffled.map(n => `
-                <button class="number-opt-btn sort-card-btn" data-num="${n}" style="width:60px; height:60px; font-size:1.8rem; border-radius:12px; background:white; color:var(--text-main); border:2px solid var(--text-muted); cursor:pointer; transition:all 0.2s ease; font-weight:700; font-family:'Outfit',sans-serif; display:flex; align-items:center; justify-content:center;">
-                    ${n}
-                </button>
-            `).join("")}
-        </div>
-        <div id="sort-progress-msg" style="font-weight:600; text-align:center; min-height:24px; color:var(--color-green); font-size:1.1rem; width:100%;"></div>
-    `;
-    
-    let expectedNextIndex = 0;
-    
-    container.querySelectorAll(".sort-card-btn").forEach(btn => {
-        btn.addEventListener("click", (e) => {
-            const num = parseInt(e.currentTarget.getAttribute("data-num"));
-            const targetNum = numbers[expectedNextIndex];
-            
-            if (num === targetNum) {
-                e.currentTarget.style.background = "var(--color-pastel-green)";
-                e.currentTarget.style.color = "var(--color-green)";
-                e.currentTarget.style.borderColor = "var(--color-green)";
-                e.currentTarget.disabled = true;
-                e.currentTarget.style.transform = "scale(0.9)";
-                
-                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = audioCtx.createOscillator();
-                osc.frequency.value = 400 + (expectedNextIndex * 80);
-                osc.connect(audioCtx.destination);
-                osc.start();
-                setTimeout(() => osc.stop(), 100);
-                
-                expectedNextIndex++;
-                
-                const msgBox = document.getElementById("sort-progress-msg");
-                if (expectedNextIndex < numbers.length) {
-                    msgBox.style.color = "var(--color-green)";
-                    msgBox.innerText = state.locale === "es" ? 
-                        `¡Bien hecho! Ahora busca el ${numbers[expectedNextIndex]}` : 
-                        `Well done! Now find ${numbers[expectedNextIndex]}`;
-                } else {
-                    msgBox.innerText = "";
-                    completeCurrentActivity();
-                }
-            } else {
-                playAudio("GEN_INTENTALO_OTRA_VEZ");
-                
-                const msgBox = document.getElementById("sort-progress-msg");
-                msgBox.style.color = "var(--color-heart)";
-                msgBox.innerText = state.locale === "es" ? 
-                    `¡Casi! Busca el número ${targetNum}` : 
-                    `Try again! Search for number ${targetNum}`;
-                    
-                logTelemetryError(`W1_ACT_ORDER_${start}_${end}`, targetNum.toString(), num.toString(), "Ordenación de números fuera de orden.");
-            }
-        });
-    });
-}
+
+
 
 // ---- NUEVOS MINI-JUEGOS PEDAGÓGICOS ----
 
 // 1. Introducción Secuencial de Números (1 a 10)
 function setupGameIntro(container, number) {
+    const isVowel = typeof number === "string";
+    const vowelEmojis = {
+        "A": { emoji: "✈️", wordEs: "Avión", wordEn: "Airplane" },
+        "E": { emoji: "🐘", wordEs: "Elefante", wordEn: "Elephant" },
+        "I": { emoji: "🏝️", wordEs: "Isla", wordEn: "Island" },
+        "O": { emoji: "🐻", wordEs: "Oso", wordEn: "Bear" },
+        "U": { emoji: "🍇", wordEs: "Uva", wordEn: "Grapes" }
+    };
+    
+    const info = isVowel ? vowelEmojis[number.toUpperCase()] : null;
     const voiceMsg = state.locale === "es" ? 
-        `Este es el número ${number}. ¡Tócalo para escuchar cómo suena!` :
-        `This is number ${number}. Tap it to hear its sound!`;
+        (isVowel ? `Esta es la letra ${number}. ${number} de ${info.wordEs}. ¡Tócala para escuchar!` : `Este es el número ${number}. ¡Tócalo para escuchar cómo suena!`) :
+        (isVowel ? `This is letter ${number}. ${number} for ${info.wordEn}. Tap it to listen!` : `This is number ${number}. Tap it to hear its sound!`);
         
     setTimeout(() => speakText(voiceMsg), 1000);
     
@@ -2217,8 +3145,14 @@ function setupGameIntro(container, number) {
             <button class="number-opt-btn active-pulse" id="intro-number-btn" style="width: 140px; height: 140px; font-size: 5rem; border-radius: 50%; background: var(--color-pastel-green); color: var(--color-green); border: 4px solid var(--color-green); cursor: pointer; transition: all 0.3s ease; display:flex; align-items:center; justify-content:center; font-family:'Outfit',sans-serif; font-weight:900;">
                 ${number}
             </button>
+            ${isVowel ? `
+                <div style="text-align:center;">
+                    <span style="font-size:3.5rem; display:inline-block; animation: float 2.5s infinite ease-in-out alternate;">${info.emoji}</span>
+                    <h3 style="font-family:'Outfit',sans-serif; font-weight:800; color:var(--color-green); margin-top:5px;">${state.locale === "es" ? info.wordEs : info.wordEn}</h3>
+                </div>
+            ` : ""}
             <p style="font-weight: 500; color: var(--text-main);">
-                ${state.locale === "es" ? "Presiona el número para escuchar" : "Press the number to listen"}
+                ${state.locale === "es" ? (isVowel ? "Presiona la letra para escuchar" : "Presiona el número para escuchar") : (isVowel ? "Press the letter to listen" : "Press the number to listen")}
             </p>
             <button class="donate-btn" id="btn-intro-continue" style="display: none; background: var(--color-green); color: white; padding: 10px 30px; font-size: 1.1rem; border-radius: 20px; box-shadow: 0 4px 10px rgba(39, 174, 96, 0.2); max-width: 200px; font-weight:700;">
                 ${state.locale === "es" ? "Continuar ➔" : "Continue ➔"}
@@ -2233,7 +3167,8 @@ function setupGameIntro(container, number) {
         // Efecto de sonido (oscilador local)
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         const osc = audioCtx.createOscillator();
-        osc.frequency.value = 300 + (number * 30);
+        const frequencies = { "A": 440, "E": 329.63, "I": 293.66, "O": 261.63, "U": 220 };
+        osc.frequency.value = isVowel ? (frequencies[number.toUpperCase()] || 440) : (300 + (number * 30));
         osc.connect(audioCtx.destination);
         osc.start();
         setTimeout(() => osc.stop(), 200);
@@ -2242,10 +3177,10 @@ function setupGameIntro(container, number) {
         setTimeout(() => { btn.style.transform = "none"; }, 150);
         
         // Explicación de voz
-        const numWord = state.locale === "es" ? 
-            `Número ${number}.` : 
-            `Number ${number}.`;
-        speakText(numWord);
+        const explanation = state.locale === "es" ? 
+            (isVowel ? `Letra ${number}. ${number} de ${info.wordEs}.` : `Número ${number}.`) :
+            (isVowel ? `Letter ${number}. ${number} for ${info.wordEn}.` : `Number ${number}.`);
+        speakText(explanation);
         
         if (continueBtn && continueBtn.style.display === "none") {
             continueBtn.style.display = "block";
@@ -2259,18 +3194,21 @@ function setupGameIntro(container, number) {
 }
 
 // 2. Actividad: Repite Conmigo
-function setupGameRepeat(container) {
-    const targetNumber = Math.floor(Math.random() * 10) + 1;
+function setupGameRepeat(container, targetVowel = null) {
+    const isVowelWorld = state.currentWorld === 2;
+    const vowelsList = ["A", "E", "I", "O", "U"];
+    const targetItem = targetVowel || (isVowelWorld ? vowelsList[Math.floor(Math.random() * 5)] : (Math.floor(Math.random() * 10) + 1));
+    
     const voiceMsg = state.locale === "es" ? 
-        `Repite conmigo: el número ${targetNumber}. Presiona el micrófono y dilo fuerte.` :
-        `Repeat after me: number ${targetNumber}. Press the microphone and say it out loud.`;
+        (isVowelWorld ? `Repite conmigo: la vocal ${targetItem}. Presiona el micrófono y dila fuerte.` : `Repite conmigo: el número ${targetItem}. Presiona el micrófono y dilo fuerte.`) :
+        (isVowelWorld ? `Repeat after me: vowel ${targetItem}. Press the microphone and say it out loud.` : `Repeat after me: number ${targetItem}. Press the microphone and say it out loud.`);
         
     setTimeout(() => speakText(voiceMsg), 1000);
     
     container.innerHTML = `
         <div style="text-align: center; margin: 20px 0; display:flex; flex-direction:column; align-items:center;">
             <div style="font-size: 1.5rem; font-weight: 700; color: var(--color-green); margin-bottom: 15px;">
-                ${state.locale === "es" ? `Repite: ¡${targetNumber}!` : `Repeat: ${targetNumber}!`}
+                ${state.locale === "es" ? `Repite: ¡${targetItem}!` : `Repeat: ${targetItem}!`}
             </div>
             <button class="number-opt-btn active-pulse" id="mic-btn" style="width: 100px; height: 100px; font-size: 3rem; border-radius: 50%; background: var(--color-pastel-blue); color: var(--color-accent); border: 3px solid var(--color-accent); cursor: pointer; transition: all 0.3s ease; display:flex; align-items:center; justify-content:center;">
                 🎤
@@ -2322,8 +3260,8 @@ function setupGameRepeat(container) {
             status.innerText = state.locale === "es" ? "¡Genial! Te escuché." : "Great! I heard you.";
             
             speakText(state.locale === "es" ? 
-                `¡Te escuché fuerte y claro! Dijiste el número ${targetNumber}. ¡Excelente trabajo!` : 
-                `I heard you loud and clear! You said number ${targetNumber}. Excellent job!`
+                (isVowelWorld ? `¡Te escuché fuerte y claro! Dijiste la vocal ${targetItem}. ¡Excelente trabajo!` : `¡Te escuché fuerte y claro! Dijiste el número ${targetItem}. ¡Excelente trabajo!`) : 
+                (isVowelWorld ? `I heard you loud and clear! You said vowel ${targetItem}. Excellent job!` : `I heard you loud and clear! You said number ${targetItem}. Excellent job!`)
             );
             
             completeCurrentActivity();
@@ -2332,13 +3270,23 @@ function setupGameRepeat(container) {
 }
 
 // 3. Actividad: Ordenar Números
-function setupGameSort(container, start, end) {
-    const numbers = [];
-    for (let i = start; i <= end; i++) {
-        numbers.push(i);
+function setupGameSort(container, start, end, skipVoice = false) {
+    const isVowel = typeof start === "string";
+    const values = [];
+    if (isVowel) {
+        const fullVowels = ["A", "E", "I", "O", "U"];
+        const startIndex = fullVowels.indexOf(start.toUpperCase());
+        const endIndex = fullVowels.indexOf(end.toUpperCase());
+        for (let i = startIndex; i <= endIndex; i++) {
+            values.push(fullVowels[i]);
+        }
+    } else {
+        for (let i = start; i <= end; i++) {
+            values.push(i);
+        }
     }
     
-    const shuffled = [...numbers];
+    const shuffled = [...values];
     for (let i = shuffled.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
@@ -2346,7 +3294,7 @@ function setupGameSort(container, start, end) {
     
     let isSorted = true;
     for (let i = 0; i < shuffled.length; i++) {
-        if (shuffled[i] !== numbers[i]) {
+        if (shuffled[i] !== values[i]) {
             isSorted = false;
             break;
         }
@@ -2355,15 +3303,16 @@ function setupGameSort(container, start, end) {
         [shuffled[0], shuffled[1]] = [shuffled[1], shuffled[0]];
     }
     
-    const voiceMsg = state.locale === "es" ? 
-        `Ordena los números de menor a mayor, empezando por el número ${start}.` : 
-        `Sort the numbers from smallest to largest, starting with number ${start}.`;
-        
-    setTimeout(() => speakText(voiceMsg), 1000);
+    if (!skipVoice) {
+        const voiceMsg = state.locale === "es" ? 
+            (isVowel ? `Ordena las vocales en orden alfabético, empezando por la letra ${start}.` : `Ordena los números de menor a mayor, empezando por el número ${start}.`) : 
+            (isVowel ? `Sort the vowels in alphabetical order, starting with letter ${start}.` : `Sort the numbers from smallest to largest, starting with number ${start}.`);
+        setTimeout(() => speakText(voiceMsg), 1000);
+    }
     
     container.innerHTML = `
         <h4 style="margin-bottom:15px; text-align:center; font-family:'Outfit',sans-serif; font-weight:700; color:var(--text-main);">
-            ${state.locale === "es" ? `Toca en orden del ${start} al ${end}:` : `Tap in order from ${start} to ${end}:`}
+            ${state.locale === "es" ? `Toca en orden de la ${start} a la ${end}:` : `Tap in order from ${start} to ${end}:`}
         </h4>
         <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:400px; margin: 0 auto 20px;">
             ${shuffled.map(n => `
@@ -2379,8 +3328,9 @@ function setupGameSort(container, start, end) {
     
     container.querySelectorAll(".sort-card-btn").forEach(btn => {
         btn.addEventListener("click", (e) => {
-            const num = parseInt(e.currentTarget.getAttribute("data-num"));
-            const targetNum = numbers[expectedNextIndex];
+            const rawVal = e.currentTarget.getAttribute("data-num");
+            const num = isVowel ? rawVal : parseInt(rawVal);
+            const targetNum = values[expectedNextIndex];
             
             if (num === targetNum) {
                 e.currentTarget.style.background = "var(--color-pastel-green)";
@@ -2399,25 +3349,20 @@ function setupGameSort(container, start, end) {
                 expectedNextIndex++;
                 
                 const msgBox = document.getElementById("sort-progress-msg");
-                if (expectedNextIndex < numbers.length) {
+                if (expectedNextIndex < values.length) {
                     msgBox.style.color = "var(--color-green)";
                     msgBox.innerText = state.locale === "es" ? 
-                        `¡Bien hecho! Ahora busca el ${numbers[expectedNextIndex]}` : 
-                        `Well done! Now find ${numbers[expectedNextIndex]}`;
+                        `¡Bien hecho! Ahora busca la ${values[expectedNextIndex]}` : 
+                        `Well done! Now find ${values[expectedNextIndex]}`;
                 } else {
                     msgBox.innerText = "";
                     completeCurrentActivity();
                 }
             } else {
-                playAudio("GEN_INTENTALO_OTRA_VEZ");
-                
-                const msgBox = document.getElementById("sort-progress-msg");
-                msgBox.style.color = "var(--color-heart)";
-                msgBox.innerText = state.locale === "es" ? 
-                    `¡Casi! Busca el número ${targetNum}` : 
-                    `Try again! Search for number ${targetNum}`;
-                    
-                logTelemetryError(`W1_ACT_ORDER_${start}_${end}`, targetNum.toString(), num.toString(), "Ordenación de números fuera de orden.");
+                handleWrongAttempt(`sort_${start}_${end}`, { start, end }, () => {
+                    setupGameSort(container, start, end, true);
+                });
+                logTelemetryError(`W1_ACT_ORDER_${start}_${end}`, targetNum.toString(), num.toString(), "Ordenación fuera de orden.");
             }
         });
     });
@@ -2426,30 +3371,44 @@ function setupGameSort(container, start, end) {
 // ---- FINAL CURRICULAR: El Árbol Sabio Frondoso ----
 function renderGrandFinale(arena) {
     const totalActs = getActiveActivities().length;
+    const currentWorld = state.currentWorld || 1;
+    const nextWorld = currentWorld + 1;
+    const nextWorldTitle = worldsData[state.locale][nextWorld - 1] ? worldsData[state.locale][nextWorld - 1].title : "";
+    
     arena.innerHTML = `
         <div class="modal-graphic" style="font-size:6rem; animation: float 2.5s infinite ease-in-out;">🌳</div>
         <h2 style="color:var(--color-green); font-weight:900;">🏆 ¡Felicitaciones, ${state.childName}!</h2>
         <p style="color:var(--text-muted); max-width:400px; margin: 0 auto;">
             ${state.locale === "es" ? 
-                `¡Has completado las ${totalActs} actividades del Mundo 1! El Árbol Sabio ha crecido fuerte y frondoso y está lleno de flores.` : 
-                `You have completed all ${totalActs} activities of World 1! The Wise Tree has grown strong, leafy, and full of flowers.`}
+                `¡Has completado las ${totalActs} actividades del Mundo ${currentWorld}! El Árbol Sabio ha crecido fuerte y frondoso y está lleno de flores.` : 
+                `You have completed all ${totalActs} activities of World ${currentWorld}! The Wise Tree has grown strong, leafy, and full of flowers.`}
         </p>
         
-        <div style="background:var(--color-pastel-green); border: 2px solid var(--color-green); border-radius:15px; padding:15px; margin:15px 0; font-weight:800; color:#1b5e20;">
-            🔑 ${state.locale === "es" ? "MUNDO 2 DESBLOQUEADO: Conteo y Grupos" : "WORLD 2 UNLOCKED: Counting & Grouping"}
-        </div>
+        ${nextWorldTitle ? `
+            <div style="background:var(--color-pastel-green); border: 2px solid var(--color-green); border-radius:15px; padding:15px; margin:15px 0; font-weight:800; color:#1b5e20;">
+                🔑 ${state.locale === "es" ? `MUNDO ${nextWorld} DESBLOQUEADO: ${nextWorldTitle}` : `WORLD ${nextWorld} UNLOCKED: ${nextWorldTitle}`}
+            </div>
+        ` : ""}
         
         <button class="register-submit-btn" id="btn-reset-progress" style="background:var(--gradient-orange); padding:12px 24px; box-shadow:0 4px 10px rgba(0,0,0,0.15)">
-            ${state.locale === "es" ? "🔄 Volver a Jugar Mundo 1" : "🔄 Replay World 1"}
+            ${state.locale === "es" ? `🔄 Volver a Jugar Mundo ${currentWorld}` : `🔄 Replay World ${currentWorld}`}
         </button>
     `;
     
+    // Desbloquear el siguiente mundo en worldsData
+    const worldList = worldsData[state.locale];
+    const nextWorldObj = worldList.find(w => w.num === nextWorld);
+    if (nextWorldObj) {
+        nextWorldObj.unlocked = true;
+    }
+    
     const finalSpeech = state.locale === "es" ? 
-        `¡Felicitaciones ${state.childName}! Has completado todo el Mundo 1. Tu Árbol Sabio ha crecido fuerte y feliz. ¡Has desbloqueado el Mundo 2!` :
-        `Congratulations ${state.childName}! You completed all of World 1. Your Wise Tree has grown strong and happy. You have unlocked World 2!`;
+        `¡Felicitaciones ${state.childName}! Has completado todo el Mundo ${currentWorld}. Tu Árbol Sabio ha crecido fuerte y feliz. ¡Has desbloqueado el Mundo ${nextWorld}!` :
+        `Congratulations ${state.childName}! You completed all of World ${currentWorld}. Your Wise Tree has grown strong and happy. You have unlocked World ${nextWorld}!`;
     setTimeout(() => speakText(finalSpeech), 800);
     
     document.getElementById("btn-reset-progress").addEventListener("click", () => {
+        state.worldProgress[currentWorld] = 0;
         state.currentActivityIndex = 0;
         state.currentTreePage = 0;
         
@@ -2458,6 +3417,10 @@ function renderGrandFinale(arena) {
         if (loggedEmail) {
             const users = JSON.parse(localStorage.getItem("yarumito_users") || "{}");
             if (users[loggedEmail]) {
+                if (!users[loggedEmail].worldProgress) {
+                    users[loggedEmail].worldProgress = {};
+                }
+                users[loggedEmail].worldProgress[currentWorld] = 0;
                 users[loggedEmail].currentActivityIndex = 0;
                 localStorage.setItem("yarumito_users", JSON.stringify(users));
             }
@@ -2480,12 +3443,16 @@ document.addEventListener("DOMContentLoaded", () => {
     setupAccordion();
     setupModales();
     setupDonations();
+    setupNavigation();
+    setupActivityFeedback();
+    setupVoiceSettings();
     
     // Cargar estado guardado
     loadLocalState();
     
     // Renderizado inicial
     updateLanguageUI();
+    showPage("landing");
     
     // Toggle de Idioma
     document.getElementById("lang-toggle").addEventListener("click", () => {
@@ -2510,7 +3477,7 @@ document.addEventListener("DOMContentLoaded", () => {
             
             const activitiesGrid = document.getElementById("activities-grid-container");
             if (activitiesGrid && activitiesGrid.innerHTML !== "") {
-                renderWorld1Activities();
+                renderWorldActivities();
             }
         });
     }

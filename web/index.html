@@ -28,8 +28,14 @@
         <div class="logo" id="logo-el">
             <span class="logo-icon">🌳</span> Yarumito
         </div>
-        <div class="header-controls">
+        <div class="header-controls" style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+            <nav class="nav-links" style="display:flex; gap:8px; align-items:center;">
+                <button id="nav-landing-btn" class="nav-link-btn active" style="background:none; border:none; font-family:'Outfit',sans-serif; font-weight:700; font-size:0.95rem; cursor:pointer; transition:all 0.2s;">🏠 Inicio</button>
+                <button id="nav-game-btn" class="nav-link-btn" style="background:none; border:none; font-family:'Outfit',sans-serif; font-weight:700; font-size:0.95rem; cursor:pointer; transition:all 0.2s;">🎮 Mi Árbol</button>
+                <button id="nav-blog-btn" class="nav-link-btn" style="background:none; border:none; font-family:'Outfit',sans-serif; font-weight:700; font-size:0.95rem; cursor:pointer; transition:all 0.2s;">📰 Blog</button>
+            </nav>
             <button id="lang-toggle" class="lang-btn">ES / EN</button>
+            <button id="btn-voice-settings" class="lang-btn" style="font-weight:700; cursor:pointer;">⚙️ Voz</button>
             <label class="pc-mode-container" style="display:flex; align-items:center; gap:6px; cursor:pointer; font-size:0.85rem; font-weight:700; background:rgba(0,0,0,0.03); padding:6px 12px; border-radius:15px; border:1px solid rgba(0,0,0,0.05); user-select:none; color:var(--text-main); font-family:'Outfit',sans-serif;">
                 <input type="checkbox" id="pc-mode-check" style="cursor:pointer; width:16px; height:16px; accent-color:var(--color-green);">
                 <span id="pc-mode-label">💻 Modo PC</span>
@@ -82,6 +88,75 @@
             </div>
         </section>
 
+        <!-- SECCIÓN DE PROPÓSITO Y ACERCA DE YARUMITO (Solo visible en Inicio) -->
+        <section id="about-yarumito-section" class="glass-card" style="margin-top: 30px; padding: 30px; font-family:'Outfit', sans-serif;">
+            <div style="display: flex; flex-direction: column; gap: 30px;">
+                <!-- Propósito y A quién va dirigido -->
+                <div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: center; justify-content: space-between;">
+                    <div style="flex: 1; min-width: 280px;">
+                        <span class="heart-badge" style="background: var(--color-pastel-green); color: var(--color-green); padding: 5px 12px; border-radius: 12px; font-weight: 700; font-size: 0.8rem;">🌳 Nuestro Propósito</span>
+                        <h2 style="font-size: 2rem; font-weight: 900; margin-top: 10px; color: var(--text-main);" id="about-purpose-title">Un espacio seguro diseñado para la neurodiversidad</h2>
+                        <p style="margin-top: 15px; font-size: 0.95rem; line-height: 1.6; color: var(--text-muted);" id="about-purpose-desc">
+                            Yarumito está especialmente dirigido a niños con dificultades de aprendizaje y neurodiversidad (TDAH, Autismo, Dislexia, Discalculia). El motor pedagógico evalúa la interacción cognitiva de manera dinámica, ignorando la edad cronológica para adaptarse 100% al ritmo del niño mediante juegos sin límites de tiempo, presiones competitivas ni penalizaciones por fallar.
+                        </p>
+                    </div>
+                    <div style="flex: 1; min-width: 280px; text-align: center; font-size: 8rem; animation: float 3s infinite ease-in-out;">
+                        🦊
+                    </div>
+                </div>
+                
+                <hr style="border: none; border-top: 1.5px solid rgba(0,0,0,0.06);">
+                
+                <!-- Tipos de Actividades y Filosofía Multimodal -->
+                <div>
+                    <h3 style="font-size: 1.5rem; font-weight: 900; color: var(--text-main); text-align: center;" id="about-interaction-title">La tecnología y el juego físico en armonía</h3>
+                    <p style="margin: 15px auto; max-width: 750px; text-align: center; font-size: 0.95rem; line-height: 1.6; color: var(--text-muted);" id="about-interaction-desc">
+                        Nuestra filosofía de aprendizaje une lo mejor de la tecnología interactiva con actividades físicas fuera de pantalla para combatir el sedentarismo y la sobreestimulación visual.
+                    </p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 25px;">
+                        <div style="background: white; padding: 20px; border-radius: 18px; border: 1px solid rgba(0,0,0,0.04); box-shadow: 0 4px 10px rgba(0,0,0,0.01);">
+                            <span style="font-size: 2.2rem; display: block; margin-bottom: 10px;">👂</span>
+                            <h4 style="font-weight: 800; margin-bottom: 8px;" id="activity-type-auditory">Entrenamiento Auditivo</h4>
+                            <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;" id="activity-type-auditory-desc">Contar y discriminar sonidos en tiempo real (como ladridos de perritos o campanas) para fortalecer la atención.</p>
+                        </div>
+                        <div style="background: white; padding: 20px; border-radius: 18px; border: 1px solid rgba(0,0,0,0.04); box-shadow: 0 4px 10px rgba(0,0,0,0.01);">
+                            <span style="font-size: 2.2rem; display: block; margin-bottom: 10px;">✏️</span>
+                            <h4 style="font-weight: 800; margin-bottom: 8px;" id="activity-type-tracing">Trazado Visomotor</h4>
+                            <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;" id="activity-type-tracing-desc">Guiar trazos uniendo puntos en pantalla para estimular el control de la grafía y la motricidad fina.</p>
+                        </div>
+                        <div style="background: white; padding: 20px; border-radius: 18px; border: 1px solid rgba(0,0,0,0.04); box-shadow: 0 4px 10px rgba(0,0,0,0.01);">
+                            <span style="font-size: 2.2rem; display: block; margin-bottom: 10px;">🦘</span>
+                            <h4 style="font-weight: 800; margin-bottom: 8px;" id="activity-type-movement">Movimiento Físico</h4>
+                            <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;" id="activity-type-movement-desc">Retos donde el niño salta con el móvil o explora su habitación escaneando tarjetas QR impresas en casa.</p>
+                        </div>
+                        <div style="background: white; padding: 20px; border-radius: 18px; border: 1px solid rgba(0,0,0,0.04); box-shadow: 0 4px 10px rgba(0,0,0,0.01);">
+                            <span style="font-size: 2.2rem; display: block; margin-bottom: 10px;">👨‍👩‍👦</span>
+                            <h4 style="font-weight: 800; margin-bottom: 8px;" id="activity-type-parental">Desafíos en Familia</h4>
+                            <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;" id="activity-type-parental-desc">Pausas lúdicas supervisadas fuera de la pantalla que fomentan la socialización con tutores o padres.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MARCADOR DE POSICIÓN DE JUEGO PARA USUARIO NO REGISTRADO (Se muestra al hacer clic en Mi Árbol si no hay login) -->
+        <section id="game-placeholder-zone" class="glass-card" style="display: none; text-align: center; padding: 60px 30px; margin-top: 30px; font-family:'Outfit', sans-serif;">
+            <div style="font-size: 6rem; margin-bottom: 20px; animation: float 3s infinite ease-in-out;">🔒</div>
+            <h2 id="unreg-title" style="font-size: 2rem; font-weight: 900; color: var(--text-main); margin-bottom: 15px;">Tu Árbol de Progreso Personalizado</h2>
+            <p id="unreg-desc" style="color: var(--text-muted); max-width: 500px; margin: 0 auto 30px; line-height: 1.6; font-size: 1.05rem;">
+                Para ver el avance del Mundo 1, ver germinar tu semilla del Árbol Sabio, subir por sus hojas y desbloquear los 20 mundos de aprendizaje adaptativo, necesitas iniciar sesión o registrar una cuenta de tutor.
+            </p>
+            <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                <button class="register-submit-btn" id="btn-unreg-login" style="padding: 14px 28px; font-weight: 800; cursor: pointer; background: var(--gradient-accent); border: none; font-family:'Outfit', sans-serif; box-shadow: 0 4px 15px rgba(39, 174, 96, 0.2);">
+                    🔑 Registrarse o Iniciar Sesión
+                </button>
+                <button class="lang-btn" id="btn-unreg-back" style="padding: 14px 28px; font-weight: 800; cursor: pointer; font-family:'Outfit', sans-serif;">
+                    🏠 Volver al Inicio
+                </button>
+            </div>
+        </section>
+
         <!-- ZONA DE JUEGO ACTIVO (Aparece tras registro o iniciar una actividad) -->
         <section id="game-play-zone" class="glass-card active-game-section" style="display: none;">
             <div class="game-zone-header">
@@ -118,6 +193,31 @@
                 <div class="active-activity-column">
                     <div class="active-activity-box" id="active-activity-box">
                         <!-- El juego activo se renderiza aquí -->
+                    </div>
+                    
+                    <!-- Caja de Reporte de Mal Funcionamiento / Recomendaciones -->
+                    <div class="activity-feedback-wrapper" style="margin: 20px auto 0; text-align: center;">
+                        <button class="feedback-toggle-btn" id="btn-toggle-feedback" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-weight:700; display:inline-flex; align-items:center; gap:6px;">⚠️ Reportar error o sugerencia</button>
+                        <div class="feedback-report-box" id="feedback-report-box" style="display:none; text-align:left; margin-top:10px;">
+                            <h4 style="font-size:0.9rem; font-weight:800; margin-bottom:8px;">Reportar problema / Recomendación</h4>
+                            <form id="activity-feedback-form">
+                                <div style="margin-bottom:8px;">
+                                    <label for="feedback-type" style="font-size:0.75rem; font-weight:700; display:block; margin-bottom:3px;">Tipo de reporte</label>
+                                    <select id="feedback-type" style="width:100%; padding:6px; border-radius:8px; border:1px solid rgba(0,0,0,0.1); font-size:0.8rem;">
+                                        <option value="malfuncionamiento">❌ Mal funcionamiento (Error visual/audio)</option>
+                                        <option value="recomendacion">💡 Recomendación / Sugerencia pedagógica</option>
+                                    </select>
+                                </div>
+                                <div style="margin-bottom:8px;">
+                                    <label for="feedback-desc" style="font-size:0.75rem; font-weight:700; display:block; margin-bottom:3px;">Descripción</label>
+                                    <textarea id="feedback-desc" rows="3" style="width:100%; padding:6px; border-radius:8px; border:1px solid rgba(0,0,0,0.1); font-size:0.8rem; resize:none;" placeholder="Cuéntanos qué falló o qué sugieres..." required></textarea>
+                                </div>
+                                <button type="submit" class="register-submit-btn" style="width:100%; padding:8px; font-size:0.8rem; background:var(--gradient-accent); color:white; border:none; border-radius:8px; font-weight:700; cursor:pointer;">Enviar reporte</button>
+                            </form>
+                            <div id="feedback-report-success" style="display:none; color:var(--color-green); font-weight:700; font-size:0.8rem; margin-top:8px; text-align:center;">
+                                ¡Muchas gracias! Tu reporte ha sido guardado.
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -239,6 +339,45 @@
                     <button class="donate-btn" id="donate-submit-btn">Contribuir ahora</button>
                     <div class="donation-impact-label" id="donation-impact-lbl">✔ Financiará 18 días de servidor.</div>
                 </div>
+        <!-- SECCIÓN DEL BLOG DE COMUNIDAD (Solo visible en pestaña Blog) -->
+        <section id="blog-section" class="blog-section glass-card" style="display: none; margin-top: 30px;">
+            <h2 id="blog-title">📰 Blog de la Comunidad Yarumito</h2>
+            <p id="blog-subtitle" class="section-desc">Artículos sobre aprendizaje adaptativo, consejos de crianza y guías pedagógicas preparadas por expertos.</p>
+            
+            <!-- Contenedor del listado del blog -->
+            <div id="blog-list-view">
+                <div class="blog-grid" id="blog-posts-grid">
+                    <!-- Artículos del blog renderizados dinámicamente -->
+                </div>
+            </div>
+
+            <!-- Contenedor del artículo en detalle -->
+            <div id="blog-detail-view" style="display: none;">
+                <button class="lang-btn" id="btn-back-to-blog" style="margin-bottom: 20px; font-weight:700; cursor:pointer;">⬅️ Volver a los artículos</button>
+                <div class="blog-full-article" id="blog-article-content">
+                    <!-- Contenido completo del post -->
+                </div>
+                
+                <!-- Caja de comentarios -->
+                <div class="blog-comments-section">
+                    <h3 id="comments-section-title">Comentarios de la Comunidad</h3>
+                    
+                    <div class="blog-comments-list" id="blog-comments-list">
+                        <!-- Lista de comentarios guardados -->
+                    </div>
+                    
+                    <div class="blog-comment-form" style="margin-top:20px;">
+                        <h4 id="add-comment-title" style="margin-bottom:12px; font-weight:800;">Escribe tu comentario</h4>
+                        <form id="blog-comment-submit-form">
+                            <div style="display:flex; gap:10px; margin-bottom:10px; flex-wrap:wrap;">
+                                <input type="text" id="comment-author-name" placeholder="Tu Nombre / Apodo" required style="flex:1; min-width:180px; padding:10px; border-radius:10px; border:2px solid rgba(0,0,0,0.08); font-family:'Outfit',sans-serif; outline:none; font-size:0.9rem;">
+                                <input type="email" id="comment-author-email" placeholder="Tu Correo (No se publica)" required style="flex:1; min-width:180px; padding:10px; border-radius:10px; border:2px solid rgba(0,0,0,0.08); font-family:'Outfit',sans-serif; outline:none; font-size:0.9rem;">
+                            </div>
+                            <textarea id="comment-text-content" rows="4" placeholder="Comparte tus ideas, experiencias o preguntas sobre este artículo..." required style="width:100%; border-radius:12px; padding:10px; border:2px solid rgba(0,0,0,0.08); font-family:'Outfit',sans-serif; resize:none; font-size:0.9rem; margin-bottom:10px; outline:none;"></textarea>
+                            <button type="submit" class="register-submit-btn" style="background:var(--gradient-accent); color:white; border:none; padding:10px 20px; font-weight:700; cursor:pointer;">Publicar Comentario</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </section>
     </main>
@@ -340,6 +479,39 @@
                 <div class="activities-grid" id="activities-grid-container">
                     <!-- Cargado dinámicamente desde app.js -->
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE AJUSTES DE VOZ Y RITMO -->
+    <div id="voice-settings-modal" class="modal-overlay">
+        <div class="modal-card glass-card" style="max-width:400px; padding:25px;">
+            <div class="modal-header">
+                <h2 id="voice-settings-title" style="font-family:'Outfit',sans-serif; font-weight:900; color:var(--text-main); font-size:1.4rem;">🔊 Ajustes de Voz y Ritmo</h2>
+                <button class="close-modal-btn" id="close-voice-settings-btn">&times;</button>
+            </div>
+            <div class="modal-body" style="text-align:left; margin-top:15px; font-family:'Outfit',sans-serif;">
+                <div class="form-group" style="margin-bottom:18px;">
+                    <label for="voice-select" id="lbl-voice-select" style="font-weight:800; display:block; margin-bottom:6px; color:var(--text-main); font-size:0.9rem;">Elige la voz del Árbol Sabio</label>
+                    <select id="voice-select" style="width:100%; padding:10px; border-radius:12px; border:2px solid rgba(0,0,0,0.08); font-family:'Outfit',sans-serif; font-size:0.9rem; outline:none; background:white; color:var(--text-main);">
+                        <!-- Se llena dinámicamente -->
+                    </select>
+                </div>
+                
+                <div class="form-group" style="margin-bottom:20px;">
+                    <label for="voice-speed-slider" id="lbl-voice-speed" style="font-weight:800; display:block; margin-bottom:6px; color:var(--text-main); font-size:0.9rem;">
+                        Velocidad de habla: <span id="voice-speed-val" style="color:var(--color-green); font-weight:900;">0.85x</span>
+                    </label>
+                    <input type="range" id="voice-speed-slider" min="0.5" max="1.5" step="0.05" value="0.85" style="width:100%; accent-color:var(--color-green); cursor:pointer;">
+                    <span style="font-size:0.75rem; color:var(--text-muted); display:flex; justify-content:space-between; margin-top:6px; font-weight:600;">
+                        <span id="lbl-speed-slow">🐢 Más Pausada (Slow)</span>
+                        <span id="lbl-speed-fast">⚡ Más Rápida (Fast)</span>
+                    </span>
+                </div>
+                
+                <button class="register-submit-btn" id="btn-test-voice" style="background:var(--gradient-accent); border:none; width:100%; padding:12px; font-weight:800; border-radius:12px; color:white; cursor:pointer; font-family:'Outfit',sans-serif; font-size:0.95rem; box-shadow:0 4px 12px rgba(39,174,96,0.15); transition:all 0.2s;">
+                    🔊 Probar Voz / Test Voice
+                </button>
             </div>
         </div>
     </div>
