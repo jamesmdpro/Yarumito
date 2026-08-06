@@ -1,0 +1,6 @@
+{
+  "appId": "jamesmdpro.yarumito.app",
+  "appName": "Yarumito",
+  "webDir": "dist",
+  "bundledWebRuntime": false
+}
