@@ -2,6 +2,8 @@
 // Yarumito App Logic: Landing Completa & Flujos
 // ==========================================
 
+import { TextToSpeech } from '@capacitor-community/text-to-speech';
+
 const API_BASE_URL = "http://127.0.0.1:8000";
 
 // Estado de la aplicación
@@ -18,6 +20,7 @@ const state = {
     childAvatar: "🦊",
     currentActivityIndex: 0,
     currentWorld: 1, // Mundo activo
+    tutorModeUnlocked: true, // Habilitar acceso a los 20 mundos de forma predeterminada
     worldProgress: {
         1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0,
         11: 0, 12: 0, 13: 0, 14: 0, 15: 0, 16: 0, 17: 0, 18: 0, 19: 0, 20: 0
@@ -921,7 +924,7 @@ function updateLanguageUI() {
 }
 
 // ==========================================
-// 3. Renderizar los 20 Mundos & Bloqueos
+// 3. Renderizar los 20 Mundos & Acceso Abierto (Modo Tutor)
 // ==========================================
 function renderWorldsShowcase() {
     const container = document.getElementById("worlds-grid-container");
@@ -931,14 +934,22 @@ function renderWorldsShowcase() {
     const list = worldsData[state.locale];
     const t = translations[state.locale];
     
+    // Actualizar etiqueta del botón de tutor si existe
+    const tutorLbl = document.getElementById("tutor-unlock-lbl");
+    if (tutorLbl) {
+        tutorLbl.innerText = state.locale === "es" ? 
+            (state.tutorModeUnlocked ? "Modo Tutor Activo (20 Mundos Libre)" : "Modo Tutor: Desbloquear Todos los Mundos") :
+            (state.tutorModeUnlocked ? "Tutor Mode Active (20 Worlds Open)" : "Tutor Mode: Unlock All Worlds");
+    }
+    
     list.forEach(world => {
         const card = document.createElement("div");
         card.classList.add("world-card");
         
-        // El Mundo 2 se desbloquea si el niño completa al menos 8 actividades del Mundo 1
-        const isWorldUnlocked = world.num === 1 || 
-            (world.num === 2 && (state.worldProgress[1] >= 8 || world.unlocked)) || 
-            (world.num > 2 && (state.worldProgress[world.num - 1] >= 8 || world.unlocked));
+        // Con tutorModeUnlocked habilitado por defecto, todos los mundos están abiertos para exploración
+        const isWorldUnlocked = state.tutorModeUnlocked || world.num === 1 || world.unlocked ||
+            (world.num === 2 && state.worldProgress[1] >= 8) || 
+            (world.num > 2 && state.worldProgress[world.num - 1] >= 8);
         
         if (!isWorldUnlocked) {
             card.classList.add("locked");
@@ -959,34 +970,27 @@ function renderWorldsShowcase() {
         
         // Listener del botón de voz (Accesibilidad)
         card.querySelector(".card-voice-btn").addEventListener("click", (e) => {
-            e.stopPropagation(); // Evitar abrir el modal o tirar error de bloqueo
+            e.stopPropagation();
             const title = e.currentTarget.getAttribute("data-title");
             const desc = e.currentTarget.getAttribute("data-desc");
             speakText(`${title}. ${desc}`);
         });
 
-        // Listener para abrir Mundo o dar alerta en Mundos bloqueados
+        // Listener para abrir Mundo
         card.addEventListener("click", () => {
-            if (isWorldUnlocked) {
-                state.currentWorld = world.num;
-                state.currentActivityIndex = state.worldProgress[world.num] || 0;
-                saveLocalState();
-                
-                renderProgressTree();
-                renderActiveActivity();
-                
-                renderWorldActivities();
-                document.getElementById("world-activities-modal").classList.add("active");
-                
-                const worldData = worldsData[state.locale].find(w => w.num === world.num);
-                const voiceTitle = state.locale === "es" ? 
-                    `Actividades de ${worldData ? worldData.title : `Mundo ${world.num}`}` :
-                    `Activities for ${worldData ? worldData.title : `World ${world.num}`}`;
-                speakText(voiceTitle);
-            } else {
-                speakText(t.lockedWarning);
-                alert(t.lockedWarning);
-            }
+            state.currentWorld = world.num;
+            state.currentActivityIndex = state.worldProgress[world.num] || 0;
+            saveLocalState();
+            
+            renderWorldActivities();
+            const actModal = document.getElementById("world-activities-modal");
+            if (actModal) actModal.classList.add("active");
+            
+            const worldData = list.find(w => w.num === world.num);
+            const voiceTitle = state.locale === "es" ? 
+                `Mundo ${world.num}: ${worldData ? worldData.title : ""}.` :
+                `World ${world.num}: ${worldData ? worldData.title : ""}.`;
+            speakText(voiceTitle);
         });
         
         container.appendChild(card);
@@ -1016,10 +1020,10 @@ function renderWorldActivities() {
         const actCard = document.createElement("div");
         actCard.classList.add("activity-card");
         
-        // Se desbloquean secuencialmente: sólo si su índice es <= al progreso actual del mundo
-        const isActUnlocked = idx <= state.currentActivityIndex;
+        // En modo libre o explorativo, se desbloquean todas las actividades
+        const isActUnlocked = state.tutorModeUnlocked || idx <= (state.worldProgress[state.currentWorld] || 0) || idx === 0;
         if (!isActUnlocked) {
-            actCard.style.opacity = "0.5";
+            actCard.style.opacity = "0.6";
         }
         
         actCard.innerHTML = `
@@ -1032,10 +1036,7 @@ function renderWorldActivities() {
             </div>
             <div class="activity-card-controls">
                 <button class="card-voice-btn mini-speak-btn" data-text="${act.title}. ${act.desc}">🔊</button>
-                ${isActUnlocked ? 
-                    `<button class="activity-card-play-btn" data-idx="${idx}">▶</button>` : 
-                    `<span>🔒</span>`
-                }
+                <button class="activity-card-play-btn" data-idx="${idx}">▶ Play</button>
             </div>
         `;
         
@@ -1046,29 +1047,25 @@ function renderWorldActivities() {
         });
         
         // Listener de Play
-        if (isActUnlocked) {
-            actCard.querySelector(".activity-card-play-btn").addEventListener("click", (e) => {
-                const targetIdx = parseInt(e.currentTarget.getAttribute("data-idx"));
-                document.getElementById("world-activities-modal").classList.remove("active");
-                
-                // Si aún no está registrado, forzar el modal de registro primero
-                if (!state.isRegistered) {
-                    document.getElementById("register-modal").classList.add("active");
-                    return;
-                }
-                
-                // Activar la Zona de Juego
-                state.currentActivityIndex = targetIdx;
-                saveLocalState();
-                
-                document.getElementById("game-play-zone").style.display = "block";
-                document.getElementById("jugar-section").style.display = "none";
-                document.getElementById("game-play-zone").scrollIntoView();
-                
-                renderProgressTree();
-                renderActiveActivity();
-            });
-        }
+        actCard.querySelector(".activity-card-play-btn").addEventListener("click", (e) => {
+            const targetIdx = parseInt(e.currentTarget.getAttribute("data-idx"));
+            const modal = document.getElementById("world-activities-modal");
+            if (modal) modal.classList.remove("active");
+            
+            state.isRegistered = true; // Habilitar automáticamente para prueba fluida
+            state.currentActivityIndex = targetIdx;
+            saveLocalState();
+            
+            showPage("game");
+            const playZone = document.getElementById("game-play-zone");
+            if (playZone) {
+                playZone.style.display = "block";
+                playZone.scrollIntoView({ behavior: "smooth" });
+            }
+            
+            renderProgressTree();
+            renderActiveActivity();
+        });
         
         container.appendChild(actCard);
     });
@@ -1078,6 +1075,12 @@ function renderWorldActivities() {
 // 4. Servicio e Integración de Audio
 // ==========================================
 function playAudio(code) {
+    if (!window.navigator.onLine || window.location.protocol === "file:" || window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+        // En móviles/Capacitor sin backend activo, usar TTS directamente
+        fallbackSpeechSynthesis(code);
+        return;
+    }
+    
     const url = `${API_BASE_URL}/static/audio/${state.locale}/${code}.mp3`;
     const audio = new Audio(url);
     
@@ -1087,16 +1090,47 @@ function playAudio(code) {
     });
 }
 
-function speakText(text) {
-    window.speechSynthesis.cancel();
+async function speakText(text) {
+    if (!text) return;
+    
+    // 1. Probar primero el plugin nativo de Capacitor (funciona offline en APK Android e iOS)
+    try {
+        await TextToSpeech.speak({
+            text: String(text),
+            lang: state.locale === "es" ? "es-ES" : "en-US",
+            rate: typeof state.voiceSpeed === "number" ? state.voiceSpeed : 0.85,
+            pitch: 1.0,
+            volume: 1.0,
+            category: "ambient"
+        });
+        return;
+    } catch (nativeErr) {
+        console.warn("[TTS Plugin] Usando Web Speech API de navegador como fallback", nativeErr);
+    }
+    
+    // 2. Fallback para navegador web estándar
+    if (!window.speechSynthesis) return;
+    
+    try {
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.resume();
+    } catch(e) {}
     
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = state.locale === "es" ? "es-ES" : "en-US";
+    const targetLang = state.locale === "es" ? "es-ES" : "en-US";
+    utterance.lang = targetLang;
     utterance.rate = typeof state.voiceSpeed === "number" ? state.voiceSpeed : 0.85;
     
-    if (state.voiceName) {
-        const voices = window.speechSynthesis.getVoices();
-        const selectedVoice = voices.find(v => v.name === state.voiceName);
+    const voices = window.speechSynthesis.getVoices();
+    if (voices && voices.length > 0) {
+        let selectedVoice = null;
+        if (state.voiceName) {
+            selectedVoice = voices.find(v => v.name === state.voiceName);
+        }
+        if (!selectedVoice) {
+            const prefix = state.locale === "es" ? "es" : "en";
+            selectedVoice = voices.find(v => v.lang.toLowerCase().startsWith(prefix));
+        }
         if (selectedVoice) {
             utterance.voice = selectedVoice;
         }
@@ -1107,11 +1141,18 @@ function speakText(text) {
 
 function fallbackSpeechSynthesis(code) {
     const item = state.audioCatalog.find(a => a.code === code);
-    if (!item) return;
-    
-    const text = item.translations[state.locale];
-    if (!text) return;
-    speakText(text);
+    if (item && item.translations && item.translations[state.locale]) {
+        speakText(item.translations[state.locale]);
+    } else {
+        // Frases genéricas por defecto si la clave no está cargada
+        const defaultPhrases = {
+            "GEN_SI": state.locale === "es" ? "Sí." : "Yes.",
+            "GEN_NO": state.locale === "es" ? "No." : "No.",
+            "GEN_BIEN_HECHO": state.locale === "es" ? "¡Muy bien hecho! ¡Lo lograste!" : "Well done! You did it!",
+            "GEN_INTENTALO_OTRA_VEZ": state.locale === "es" ? "Casi lo tienes. Vamos a intentarlo otra vez." : "Close. Let's try again."
+        };
+        speakText(defaultPhrases[code] || code);
+    }
 }
 
 async function loadAudioCatalog() {
@@ -2184,6 +2225,7 @@ function saveLocalState() {
         voiceName: state.voiceName,
         voiceSpeed: state.voiceSpeed,
         currentWorld: state.currentWorld,
+        tutorModeUnlocked: state.tutorModeUnlocked,
         worldProgress: state.worldProgress
     }));
 }
@@ -2201,6 +2243,7 @@ function loadLocalState() {
         state.voiceName = local.voiceName || "";
         state.voiceSpeed = typeof local.voiceSpeed === "number" ? local.voiceSpeed : 0.85;
         state.currentWorld = local.currentWorld || 1;
+        state.tutorModeUnlocked = typeof local.tutorModeUnlocked === "boolean" ? local.tutorModeUnlocked : true;
         state.worldProgress = local.worldProgress || {
             1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0,
             11: 0, 12: 0, 13: 0, 14: 0, 15: 0, 16: 0, 17: 0, 18: 0, 19: 0, 20: 0
@@ -3437,6 +3480,24 @@ function renderGrandFinale(arena) {
 // 14. Inicialización General
 // ==========================================
 document.addEventListener("DOMContentLoaded", () => {
+    // Desbloqueo de Audio Móvil al primer toque (política iOS/Android)
+    let audioUnlocked = false;
+    const unlockMobileAudio = () => {
+        if (audioUnlocked) return;
+        audioUnlocked = true;
+        try {
+            if (window.speechSynthesis) {
+                window.speechSynthesis.resume();
+            }
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === "suspended") {
+                audioCtx.resume();
+            }
+        } catch(e) {}
+    };
+    document.addEventListener("touchstart", unlockMobileAudio, { once: true });
+    document.addEventListener("click", unlockMobileAudio, { once: true });
+
     setupFallingLeaves();
     loadAudioCatalog();
     setupFreeActivity();
@@ -3454,12 +3515,52 @@ document.addEventListener("DOMContentLoaded", () => {
     updateLanguageUI();
     showPage("landing");
     
+    // Menú Hamburguesa Móvil
+    const menuBtn = document.getElementById("mobile-menu-btn");
+    const headerControls = document.getElementById("header-controls");
+    if (menuBtn && headerControls) {
+        const toggleMenu = (e) => {
+            if (e && e.cancelable) e.preventDefault();
+            const isOpen = headerControls.classList.toggle("mobile-open");
+            menuBtn.innerText = isOpen ? "✕" : "☰";
+        };
+        
+        menuBtn.addEventListener("click", toggleMenu);
+        
+        // Auto-cerrar el menú desplegable al hacer clic en cualquier opción
+        headerControls.querySelectorAll("button, a").forEach(item => {
+            item.addEventListener("click", () => {
+                headerControls.classList.remove("mobile-open");
+                menuBtn.innerText = "☰";
+            });
+        });
+    }
+
+    // Botones de Modo Tutor / Desbloquear 20 Mundos
+    const toggleUnlockAll = () => {
+        state.tutorModeUnlocked = !state.tutorModeUnlocked;
+        saveLocalState();
+        renderWorldsShowcase();
+        const msg = state.locale === "es" ?
+            (state.tutorModeUnlocked ? "¡Los 20 mundos han sido desbloqueados para exploración!" : "Modo normal activado.") :
+            (state.tutorModeUnlocked ? "All 20 worlds unlocked for exploration!" : "Normal mode active.");
+        speakText(msg);
+    };
+
+    const headerUnlockBtn = document.getElementById("btn-unlock-all-header");
+    if (headerUnlockBtn) {
+        headerUnlockBtn.addEventListener("click", toggleUnlockAll);
+    }
+    const showcaseUnlockBtn = document.getElementById("btn-toggle-unlock-all");
+    if (showcaseUnlockBtn) {
+        showcaseUnlockBtn.addEventListener("click", toggleUnlockAll);
+    }
+    
     // Toggle de Idioma
     document.getElementById("lang-toggle").addEventListener("click", () => {
         state.locale = state.locale === "es" ? "en" : "es";
         updateLanguageUI();
         
-        // Al cambiar de idioma, volver a renderizar por los textos
         renderProgressTree();
         renderActiveActivity();
     });
@@ -3471,7 +3572,6 @@ document.addEventListener("DOMContentLoaded", () => {
             state.pcMode = e.target.checked;
             saveLocalState();
             
-            // Re-renderizar la progresión y actividad del Mundo 1
             renderProgressTree();
             renderActiveActivity();
             

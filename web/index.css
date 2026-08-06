@@ -2050,5 +2050,285 @@ body {
     cursor: pointer;
 }
 
+/* ==========================================
+   Nuevos Estilos Responsivos y Accesibilidad Móvil
+   ========================================== */
 
+.logo-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: auto;
+}
 
+.mobile-menu-toggle {
+    display: none;
+    background: white;
+    border: 1px solid #dcdde1;
+    color: var(--text-main);
+    font-size: 1.4rem;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+    transition: all 0.2s ease;
+}
+
+.mobile-menu-toggle:active {
+    transform: scale(0.95);
+}
+
+.worlds-header-flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.tutor-unlock-btn {
+    background: var(--color-pastel-yellow);
+    color: #7d6608;
+    border: 2px solid #f9e79f;
+    padding: 10px 18px;
+    border-radius: 16px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 3px 10px rgba(249, 231, 159, 0.3);
+}
+
+.tutor-unlock-btn:hover {
+    background: #fef0b3;
+    transform: translateY(-2px);
+}
+
+/* ==========================================
+   Breakpoints Responsivos para Celulares y Tablets
+   ========================================== */
+
+@media (max-width: 992px) {
+    .hero-section h1 {
+        font-size: 2.5rem;
+    }
+    
+    .subtitle {
+        font-size: 1.15rem;
+    }
+    
+    .two-column-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 900px) {
+    .app-header {
+        padding: 12px 20px;
+        padding-top: max(12px, env(safe-area-inset-top));
+        flex-direction: column;
+        align-items: stretch;
+        position: relative;
+    }
+
+    .logo-wrapper {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .mobile-menu-toggle {
+        display: flex !important;
+        background: white;
+        border: 2px solid var(--color-green);
+        color: var(--color-green);
+        font-size: 1.5rem;
+        width: 46px;
+        height: 46px;
+        border-radius: 12px;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+        z-index: 1001;
+        touch-action: manipulation;
+    }
+
+    .header-controls {
+        display: none !important;
+        flex-direction: column;
+        width: 100%;
+        gap: 12px;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+        border-radius: 0 0 20px 20px;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 1000;
+        border-bottom: 3px solid var(--color-green);
+    }
+
+    .header-controls.mobile-open {
+        display: flex !important;
+        animation: slideDownNav 0.25s ease-out forwards;
+    }
+}
+
+@keyframes slideDownNav {
+    0% { opacity: 0; transform: translateY(-10px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+
+    .nav-links {
+        width: 100%;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .nav-link-btn {
+        width: 100%;
+        text-align: center;
+        padding: 12px;
+        font-size: 1rem !important;
+    }
+
+    .lang-btn, .login-nav-btn, .donar-nav-btn, .unlock-worlds-btn {
+        width: 100%;
+        text-align: center;
+        padding: 12px;
+        font-size: 0.95rem;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .pc-mode-container {
+        width: 100%;
+        justify-content: center;
+        padding: 10px;
+    }
+
+    .main-container {
+        padding: 20px 12px;
+    }
+
+    .glass-card {
+        padding: 20px 15px;
+        border-radius: 18px;
+        margin-bottom: 25px;
+    }
+
+    .hero-section {
+        margin: 20px 0 40px 0;
+    }
+
+    .hero-section h1 {
+        font-size: 2rem;
+    }
+
+    .subtitle {
+        font-size: 1rem;
+    }
+
+    .cta-button {
+        font-size: 1.1rem;
+        padding: 14px 28px;
+        width: 100%;
+        max-width: 320px;
+    }
+
+    /* Arena de Juego */
+    .game-zone-layout {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .active-activity-box {
+        padding: 18px 12px;
+        min-height: 380px;
+    }
+
+    .number-options-grid {
+        gap: 10px;
+    }
+
+    .number-opt-btn {
+        font-size: 1.8rem;
+        min-height: 55px;
+    }
+
+    /* Modal Responsivo */
+    .modal-card {
+        padding: 20px 15px;
+        width: 95%;
+        max-height: 90vh;
+        overflow-y: auto;
+        border-radius: 20px;
+    }
+
+    .modal-header h2 {
+        font-size: 1.25rem;
+    }
+
+    .worlds-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 15px;
+    }
+
+    .activity-instructions {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+    }
+
+    .wise-tree-avatar {
+        width: 75px;
+        height: 75px;
+        font-size: 3rem;
+    }
+
+    .speech-bubble {
+        border-radius: 20px;
+        padding: 14px 18px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-section h1 {
+        font-size: 1.7rem;
+    }
+
+    .worlds-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .number-options-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .dots-drawing-container {
+        width: 100%;
+        max-width: 280px;
+    }
+
+    .free-activity-container {
+        padding: 15px 10px;
+    }
+}

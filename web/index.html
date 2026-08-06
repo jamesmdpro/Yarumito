@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
     <!-- SEO Meta Tags -->
     <title>Yarumito - Aprendizaje Adaptativo para Niños y Neurodiversidad 🌳</title>
@@ -25,19 +25,23 @@
     <div class="leaf-container" id="leaf-container"></div>
 
     <header class="app-header">
-        <div class="logo" id="logo-el">
-            <span class="logo-icon">🌳</span> Yarumito
+        <div class="logo-wrapper">
+            <div class="logo" id="logo-el">
+                <span class="logo-icon">🌳</span> Yarumito
+            </div>
+            <button class="mobile-menu-toggle" id="mobile-menu-btn" aria-label="Abrir Menú">☰</button>
         </div>
-        <div class="header-controls" style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-            <nav class="nav-links" style="display:flex; gap:8px; align-items:center;">
-                <button id="nav-landing-btn" class="nav-link-btn active" style="background:none; border:none; font-family:'Outfit',sans-serif; font-weight:700; font-size:0.95rem; cursor:pointer; transition:all 0.2s;">🏠 Inicio</button>
-                <button id="nav-game-btn" class="nav-link-btn" style="background:none; border:none; font-family:'Outfit',sans-serif; font-weight:700; font-size:0.95rem; cursor:pointer; transition:all 0.2s;">🎮 Mi Árbol</button>
-                <button id="nav-blog-btn" class="nav-link-btn" style="background:none; border:none; font-family:'Outfit',sans-serif; font-weight:700; font-size:0.95rem; cursor:pointer; transition:all 0.2s;">📰 Blog</button>
+        <div class="header-controls" id="header-controls">
+            <nav class="nav-links">
+                <button id="nav-landing-btn" class="nav-link-btn active">🏠 Inicio</button>
+                <button id="nav-game-btn" class="nav-link-btn">🎮 Mi Árbol</button>
+                <button id="nav-blog-btn" class="nav-link-btn">📰 Blog</button>
             </nav>
             <button id="lang-toggle" class="lang-btn">ES / EN</button>
-            <button id="btn-voice-settings" class="lang-btn" style="font-weight:700; cursor:pointer;">⚙️ Voz</button>
-            <label class="pc-mode-container" style="display:flex; align-items:center; gap:6px; cursor:pointer; font-size:0.85rem; font-weight:700; background:rgba(0,0,0,0.03); padding:6px 12px; border-radius:15px; border:1px solid rgba(0,0,0,0.05); user-select:none; color:var(--text-main); font-family:'Outfit',sans-serif;">
-                <input type="checkbox" id="pc-mode-check" style="cursor:pointer; width:16px; height:16px; accent-color:var(--color-green);">
+            <button id="btn-voice-settings" class="lang-btn">⚙️ Voz</button>
+            <button id="btn-unlock-all-header" class="lang-btn unlock-worlds-btn" style="background:var(--color-pastel-yellow); color:#7d6608; border-color:#f9e79f;">🔓 20 Mundos</button>
+            <label class="pc-mode-container">
+                <input type="checkbox" id="pc-mode-check">
                 <span id="pc-mode-label">💻 Modo PC</span>
             </label>
             <button id="login-nav-btn" class="login-nav-btn">🔑 Iniciar Sesión</button>
@@ -225,8 +229,15 @@
 
         <!-- SECCIÓN DE MUNDOS CURRICULARES (Los 20 Mundos) -->
         <section class="worlds-showcase glass-card">
-            <h2 id="worlds-title">🗺️ Ruta de Aprendizaje: Los 20 Mundos</h2>
-            <p id="worlds-desc" class="section-desc">Nuestra currícula está estructurada en mundos progresivos. Cada mundo fortalece habilidades auditivas, visuales, de motricidad y de interacción física.</p>
+            <div class="worlds-header-flex">
+                <div>
+                    <h2 id="worlds-title">🗺️ Ruta de Aprendizaje: Los 20 Mundos</h2>
+                    <p id="worlds-desc" class="section-desc">Nuestra currícula está estructurada en mundos progresivos. Cada mundo fortalece habilidades auditivas, visuales, de motricidad y de interacción física.</p>
+                </div>
+                <button id="btn-toggle-unlock-all" class="tutor-unlock-btn">
+                    🔓 <span id="tutor-unlock-lbl">Modo Tutor: Desbloquear Todos los Mundos</span>
+                </button>
+            </div>
             
             <div class="worlds-grid" id="worlds-grid-container">
                 <!-- Cargado dinámicamente desde app.js -->
@@ -520,6 +531,6 @@
         <p>Yarumito 🌳 - Iniciativa Social Abierta, Adaptativa y Bilingüe para la Neurodiversidad.</p>
     </footer>
 
-    <script src="app.js"></script>
+    <script type="module" src="app.js"></script>
 </body>
 </html>
